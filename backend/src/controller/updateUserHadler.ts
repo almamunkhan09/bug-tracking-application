@@ -94,10 +94,11 @@ export default async function updateUser(
   next: NextFunction,
 ) {
   try {
-    const userId = req.body.userId;
+    const { id } = req.params;
+    // const userId = req.body.userId;
     const existedData = await prisma.user.findUnique({
       where: {
-        id: userId,
+        id: id,
       },
     });
     if (!existedData) {
@@ -118,7 +119,7 @@ export default async function updateUser(
 
     const result = await prisma.user.update({
       where: {
-        id: userId,
+        id: id,
       },
       data: updateData,
     });

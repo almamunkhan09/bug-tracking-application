@@ -2,6 +2,7 @@ import { Request, response, Response, Router } from 'express';
 import { omit } from 'lodash';
 import prisma from '../../prisma';
 import createUser from '../controller/crerateUserHandler';
+import deleteUser from '../controller/deleteUserHandler';
 import updateUser from '../controller/updateUserHadler';
 import { userValidate } from '../middleWares/userInputValidation';
 
@@ -18,4 +19,5 @@ users.get('/', async (req: Request, res: Response) => {
 
 users.post('/signup', userValidate, createUser);
 
-users.put('/update', updateUser);
+users.put('/update/:id', updateUser);
+users.delete('/delete/:id', deleteUser);
