@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import * as dotenv from 'dotenv';
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { omit } from 'lodash';
 import prisma from '../../prisma';
 import log from '../utils/logger';
@@ -13,11 +13,7 @@ interface NewUser {
   password: string;
 }
 
-export default async function createUser(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
+export default async function createUser(req: Request, res: Response) {
   try {
     const newUser: NewUser = {
       name: req.body.name,
@@ -56,7 +52,7 @@ export default async function createUser(
     const createdUser = omit(result, 'password');
 
     return res.status(200).json(createdUser);
-  } catch (err) {
+  } catch (err: any) {
     log.error(err);
     return res.sendStatus(409).json(err.message);
   }

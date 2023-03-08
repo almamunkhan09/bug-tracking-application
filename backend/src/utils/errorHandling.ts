@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 
-export default async function errorHandler(
+export default function errorHandler(
   err: any,
   req: Request,
   res: Response,

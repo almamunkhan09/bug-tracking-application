@@ -1,5 +1,4 @@
-import { Request, response, Response, Router } from 'express';
-import { omit } from 'lodash';
+import { Request, Response, Router } from 'express';
 import prisma from '../../prisma';
 import createUser from '../controller/crerateUserHandler';
 import deleteUser from '../controller/deleteUserHandler';
@@ -12,7 +11,7 @@ users.get('/', async (req: Request, res: Response) => {
   try {
     const allUsers = await prisma.user.findMany();
     res.status(200).json(allUsers);
-  } catch (err) {
+  } catch (err: any) {
     throw new Error(err);
   }
 });
