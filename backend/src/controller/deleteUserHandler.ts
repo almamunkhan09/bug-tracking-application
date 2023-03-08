@@ -1,13 +1,9 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 // import { omit } from 'lodash';
 import prisma from '../../prisma';
 import log from '../utils/logger';
 
-export default async function deleteUser(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
+export default async function deleteUser(req: Request, res: Response) {
   try {
     const { id } = req.params;
     const existedData = await prisma.user.findUnique({
@@ -28,8 +24,7 @@ export default async function deleteUser(
     });
 
     return res.status(200).json(result);
-    next();
-  } catch (err) {
+  } catch (err: any) {
     log.error(err);
     return res.status(500).json({
       error: err.message,

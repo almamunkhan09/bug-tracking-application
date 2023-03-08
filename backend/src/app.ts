@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv';
-import express, { NextFunction, Request, Response } from 'express';
+import express, { Request, Response } from 'express';
 import { apiHealthCheck } from './routes/apiHealthCheck';
 import { users } from './routes/user.routes';
 import errorHandler from './utils/errorHandling';
@@ -9,7 +9,7 @@ dotenv.config(); // Configure the dotenv for using enviornment variable
 
 const app = express();
 app.use(express.json());
-const PORT = process.env.PORT || 3500;
+const port = process.env.PORT || 3500;
 
 app.use('/api/status', apiHealthCheck); // Api healthcheck for the server check
 app.use('/api/users', users);
@@ -21,6 +21,6 @@ app.get('/', (req: Request, res: Response) => {
 });
 app.use(errorHandler); // This is central error handling function
 
-app.listen(PORT, async () => {
-  logger.info(`Application is listening at http://localhost:${PORT}`);
+app.listen(port, () => {
+  logger.info(`Application is listening at http://localhost:${port}`);
 });
