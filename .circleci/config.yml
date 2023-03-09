@@ -27,6 +27,7 @@ jobs:
             curl -L https://fly.io/install.sh | sh
 
             /root/.fly/bin/flyctl auth login -t "$FLY_API_KEY"
+            echo 'login succesful'
             /root/.fly/bin/flyctl deploy --remote-only
 
 workflows:
