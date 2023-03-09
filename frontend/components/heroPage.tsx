@@ -1,5 +1,4 @@
 'use client';
-// @ts-ignore
 import { Dialog } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
@@ -65,7 +64,7 @@ export default function HeroPage() {
           <div className="hidden lg:flex lg:gap-x-12">
             {navigation.map((item) => (
               <a
-                key={item.name}
+                key={`link-${item.name}`}
                 href={item.href}
                 className="text-sm font-semibold leading-6 text-white"
               >
@@ -104,7 +103,7 @@ export default function HeroPage() {
                 <div className="space-y-2 py-6">
                   {navigation.map((item) => (
                     <a
-                      key={item.name}
+                      key={`nav-${item.name}`}
                       href={item.href}
                       className="-mx-3 block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-white hover:bg-gray-400/10"
                     >
