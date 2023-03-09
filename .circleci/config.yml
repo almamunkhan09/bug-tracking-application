@@ -15,13 +15,14 @@ jobs:
 
   deploy:
     docker:
-      - image: flyio/flyctl:latest
+      - image: ubuntu:latest
     steps:
       - checkout
       - run:
           name: deploy to fly.io
           command: |
             cd frontend
+            curl -L https://fly.io/install.sh | sh
             flyctl auth login --token "$FLY_API_KEY"
             flyctl deploy --remote-only
 
