@@ -1,0 +1,40 @@
+version: 2.1
+
+jobs:
+  build:
+    working_directory: ~/repo
+    docker:
+      - image: circleci/node:14.18.1-browsers
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - yarn-v1-{{ checksum "yarn.lock" }}
+            - yarn-v1-
+      - run:
+          name: Install dependencies
+          command: yarn install --frozen-lockfile
+      - save_cache:
+          paths:
+            - ~/.cache/yarn
+          key: yarn-v1-{{ checksum "yarn.lock" }}
+
+       - run:
+          name: Build front-end
+          command: |
+            cd frontend
+            yarn
+            yarn build
+
+
+
+
+
+
+
+
+
+workflows:
+  capstone:
+    jobs:
+      - build
