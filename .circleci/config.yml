@@ -19,20 +19,12 @@ jobs:
             - ~/.cache/yarn
           key: yarn-v1-{{ checksum "yarn.lock" }}
 
-       - run:
+      - run:
           name: Build front-end
           command: |
             cd frontend
             yarn
             yarn build
-
-
-
-
-
-
-
-
 
 workflows:
   capstone:
