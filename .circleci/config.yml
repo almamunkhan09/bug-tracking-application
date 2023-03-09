@@ -20,6 +20,7 @@ jobs:
           command: |
             curl -L https://fly.io/install.sh | sh
             cd frontend
+            /home/circleci/.fly/bin/flyctl auth login
             echo 'login succesful'
             /home/circleci/.fly/bin/flyctl deploy
 
