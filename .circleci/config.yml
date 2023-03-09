@@ -14,7 +14,17 @@ jobs:
             yarn
             yarn build
 
+  deploy:
+    docker:
+      - image: flyio/flyctl:latest
+    steps:
+      - checkout
+      - run: flyctl auth login --token "$FLY_API_KEY"
+      # Use the "flyctl deploy" command instead of the "flyctl deploy" step
+      - run: flyctl deploy --image my-nextjs-app --remote-only
+
 workflows:
   capstone:
     jobs:
       - build
+      - deploy
