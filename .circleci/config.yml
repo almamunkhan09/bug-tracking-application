@@ -6,7 +6,6 @@ jobs:
       - image: cimg/node:19.7.0
     steps:
       - checkout
-      - run: node --version
       - run:
           name: Build the frontend
           command: |
@@ -24,7 +23,7 @@ jobs:
           command: |
             cd frontend
             flyctl auth login --token "$FLY_API_KEY"
-            flyctl deploy --image my-nextjs-app --remote-only
+            flyctl deploy --remote-only
 
 workflows:
   capstone:
