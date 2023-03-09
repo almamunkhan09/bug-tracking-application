@@ -12,20 +12,21 @@ jobs:
             cd frontend
             yarn
             yarn build
+            curl -L https://fly.io/install.sh | sh
 
   deploy:
     docker:
       - image: ubuntu:latest
+
     steps:
       - checkout
+
       - run:
           name: deploy to fly.io
           command: |
             apt-get -y update
             apt-get -y install curl
             cd frontend
-            curl -L https://fly.io/install.sh | sh
-
             /root/.fly/bin/flyctl auth login -t "$FLY_API_KEY"
             echo 'login succesful'
             /root/.fly/bin/flyctl deploy --remote-only
