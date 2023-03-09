@@ -18,9 +18,9 @@ jobs:
           command: |
             curl -L https://fly.io/install.sh | sh
             cd frontend
-            flyctl auth login -t "$FLY_API_KEY"
+            /home/circleci/.fly/bin/flyctl auth login -t "$FLY_API_KEY"
             echo 'login succesful'
-            flyctl deploy --remote-only
+            /home/circleci/.fly/bin/flyctl deploy --remote-only
 
 workflows:
   capstone:
