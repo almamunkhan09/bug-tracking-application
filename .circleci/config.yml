@@ -19,12 +19,17 @@ jobs:
       - image: flyio/flyctl:latest
     steps:
       - checkout
-      - run: flyctl auth login --token "$FLY_API_KEY"
-      # Use the "flyctl deploy" command instead of the "flyctl deploy" step
-      - run: flyctl deploy --image my-nextjs-app --remote-only
+      - run:
+          name: deploy to fly.io
+          command: |
+            cd frontend
+            flyctl auth login --token "$FLY_API_KEY"
+            flyctl deploy --image my-nextjs-app --remote-only
 
 workflows:
   capstone:
     jobs:
       - build
-      - deploy
+      - deploy:
+          requires:
+            - build
