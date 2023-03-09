@@ -25,8 +25,9 @@ jobs:
             apt-get -y install curl
             cd frontend
             curl -L https://fly.io/install.sh | sh
-            flyctl auth login --token "$FLY_API_KEY"
-            flyctl deploy --remote-only
+
+            /root/.fly/bin/flyctl auth login --token "$FLY_API_KEY"
+            /root/.fly/bin/flyctl deploy --remote-only
 
 workflows:
   capstone:
