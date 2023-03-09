@@ -17,8 +17,7 @@ jobs:
       - run:
           name: deploy to fly.io
           command: |
-            apt-get -y update
-            apt-get -y install curl
+
             cd frontend
             flyctl auth login -t "$FLY_API_KEY"
             echo 'login succesful'
