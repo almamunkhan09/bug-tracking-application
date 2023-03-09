@@ -14,13 +14,6 @@ jobs:
             yarn build
             curl -L https://fly.io/install.sh | sh
 
-  deploy:
-    docker:
-      - image: ubuntu:latest
-
-    steps:
-      - checkout
-
       - run:
           name: deploy to fly.io
           command: |
@@ -35,6 +28,3 @@ workflows:
   capstone:
     jobs:
       - build
-      - deploy:
-          requires:
-            - build
