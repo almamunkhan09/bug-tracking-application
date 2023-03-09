@@ -12,12 +12,11 @@ jobs:
             cd frontend
             yarn
             yarn build
-            curl -L https://fly.io/install.sh | sh
 
       - run:
           name: deploy to fly.io
           command: |
-
+            curl -L https://fly.io/install.sh | sh
             cd frontend
             flyctl auth login -t "$FLY_API_KEY"
             echo 'login succesful'
