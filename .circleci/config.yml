@@ -7,6 +7,12 @@ jobs:
     steps:
       - checkout
       - run: node --version
+      - run:
+          name: Build the frontend
+          command: |
+            cd frontend
+            yarn
+            yarn build
 
 workflows:
   capstone:
