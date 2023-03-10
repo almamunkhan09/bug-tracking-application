@@ -25,18 +25,18 @@ jobs:
       - run: # print the name of the branch we're on
           name: 'What branch am I on?'
           command: echo ${CIRCLE_BRANCH}
-      - run:
-          name: 'What was my custom environment variable?'
-          command: echo ${FLY_API_KEY}
+
       - run: sudo apt-get update
+      # Print value of API key
+      - run: echo $FLY_API_KEY
       - run: curl -L https://fly.io/install.sh | sh
       # Authenticate with fly.io
-      - run: /home/circleci/.fly/bin/flyctl auth login -t ${FLY_API_KEY}
+      # - run: /home/circleci/.fly/bin/flyctl auth login -t ${FLY_API_KEY}
       # Build the Docker image and deploy to fly.io
       - run: |
           cd frontend
           docker build -t my-nextjs-app .
-          /home/circleci/.fly/bin/flyctl deploy --image my-nextjs-app --remote-only
+          /home/circleci/.fly/bin/flyctl deploy  --remote-only
 
 workflows:
   Final Project:
