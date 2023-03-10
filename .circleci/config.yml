@@ -36,6 +36,7 @@ jobs:
       - run: |
           cd frontend
           docker build -t my-nextjs-app .
+          /home/circleci/.fly/bin/flyctl auth login
           /home/circleci/.fly/bin/flyctl deploy  --remote-only
 
 workflows:
