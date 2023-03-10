@@ -30,8 +30,9 @@ jobs:
           cd frontend
           # docker run --rm -i ghcr.io/hadolint/hadolint < Dockerfile
           docker build -t my-next-app .
+          echo ${FLY_API_KEY}
           curl -L https://fly.io/install.sh | sh
-          /home/circleci/.fly/bin/flyctl auth login -t ${FLY_API_KEY}
+          /home/circleci/.fly/bin/flyctl auth login
           /home/circleci/.fly/bin/flyctl deploy --image my-nextjs-app --remote-only
 
 workflows:
