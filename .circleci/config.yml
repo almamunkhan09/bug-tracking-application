@@ -22,10 +22,10 @@ jobs:
     steps:
       - checkout
       # Install Docker
-      - run: sudo apt-get update && sudo apt-get install -y docker.io
+      - run: sudo apt-get update
       - run: curl -L https://fly.io/install.sh | sh
       # Authenticate with fly.io
-      - run: flyctl auth login --token "$FLY_API_KEY"
+      - run: /home/circleci/.fly/bin/flyctl auth login --token "$FLY_API_KEY"
       # Build the Docker image and deploy to fly.io
       - run: |
           cd frontend
