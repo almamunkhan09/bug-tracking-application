@@ -22,6 +22,9 @@ jobs:
     steps:
       - checkout
       # Install Docker
+      - run: # print the name of the branch we're on
+          name: 'What branch am I on?'
+          command: echo ${CIRCLE_BRANCH}
       - run:
           name: 'What was my custom environment variable?'
           command: echo ${FLY_API_KEY}
