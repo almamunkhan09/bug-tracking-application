@@ -32,10 +32,10 @@ jobs:
           docker build -t my-next-app .
           curl -L https://fly.io/install.sh | sh
           /home/circleci/.fly/bin/flyctl auth login -t ${FLY_API_KEY}
-          /home/circleci/.fly/bin/flyctl deploy
+          /home/circleci/.fly/bin/flyctl deploy --image my-nextjs-app --remote-only
 
 workflows:
-  capstone:
+  Final Project:
     jobs:
       - build
       - dockerizeanddeploy:
