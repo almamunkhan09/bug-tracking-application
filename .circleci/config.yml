@@ -15,16 +15,29 @@ jobs:
             yarn
             yarn build
 
-      - run:
-          name: deploy to fly.io
-          command: |
-            curl -L https://fly.io/install.sh | sh
-            cd frontend
-            /home/circleci/.fly/bin/flyctl auth login
-            echo 'login succesful'
-            /home/circleci/.fly/bin/flyctl deploy
+  dockerizeanddeploy:
+    machine:
+      image: ubuntu-2204:2022.04.2
+    environment:
+      FLY_API_KEY: '${FLY_API_KEY}'
+    steps:
+      - checkout
+      # start proprietary DB using private Docker image
+      # with credentials stored in the UI
+
+      # build the application image and check dockerlint by hadolint
+      - run: |
+          cd frontend
+          # docker run --rm -i ghcr.io/hadolint/hadolint < Dockerfile
+          docker build -t my-next-app .
+          curl -L https://fly.io/install.sh | sh
+          /home/circleci/.fly/bin/flyctl auth login -t ${FLY_API_KEY}
+          /home/circleci/.fly/bin/flyctl deploy
 
 workflows:
   capstone:
     jobs:
       - build
+      - dockerizeanddeploy:
+          requires:
+            - build
