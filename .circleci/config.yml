@@ -22,14 +22,16 @@ jobs:
     steps:
       - checkout
       # Install Docker
+      - run:
+          name: 'What was my custom environment variable?'
+          command: echo ${FLY_API_KEY}
       - run: sudo apt-get update
       - run: curl -L https://fly.io/install.sh | sh
       # Authenticate with fly.io
-      - run: /home/circleci/.fly/bin/flyctl auth login -t "$FLY_API_KEY"
+      - run: /home/circleci/.fly/bin/flyctl auth login -t ${FLY_API_KEY}
       # Build the Docker image and deploy to fly.io
       - run: |
           cd frontend
-          # docker run --rm -i ghcr.io/hadolint/hadolint < Dockerfile
           docker build -t my-nextjs-app .
           /home/circleci/.fly/bin/flyctl deploy --image my-nextjs-app --remote-only
 
