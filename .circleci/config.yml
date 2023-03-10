@@ -1,5 +1,4 @@
 version: 2.1
-
 jobs:
   build:
     docker:
@@ -22,18 +21,16 @@ jobs:
       FLY_API_KEY: $FLY_API_KEY
     steps:
       - checkout
-      # start proprietary DB using private Docker image
-      # with credentials stored in the UI
-
-      # build the application image and check dockerlint by hadolint
+      # Install Docker
+      - run: sudo apt-get update && sudo apt-get install -y docker.io
+      - run: curl -L https://fly.io/install.sh | sh
+      # Authenticate with fly.io
+      - run: flyctl auth login --token "$FLY_API_KEY"
+      # Build the Docker image and deploy to fly.io
       - run: |
           cd frontend
           # docker run --rm -i ghcr.io/hadolint/hadolint < Dockerfile
-          docker build -t my-next-app .
-          echo $FLY_API_KEY
-          curl -L https://fly.io/install.sh | sh
-          echo 'Hi'
-          /home/circleci/.fly/bin/flyctl auth login
+          docker build -t my-nextjs-app .
           /home/circleci/.fly/bin/flyctl deploy --image my-nextjs-app --remote-only
 
 workflows:
