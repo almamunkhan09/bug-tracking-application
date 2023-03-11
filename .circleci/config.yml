@@ -1,0 +1,48 @@
+version: 2.1
+jobs:
+  build:
+    docker:
+      - image: cimg/node:19.7.0
+    environment:
+      FLY_API_KEY: '${FLY_API_KEY}'
+    steps:
+      - checkout
+      - run:
+          name: Build the frontend
+          command: |
+            cd frontend
+            yarn
+            yarn build
+
+  dockerizeanddeploy:
+    machine:
+      image: ubuntu-2204:2022.04.2
+    environment:
+      FLY_API_KEY: $FLY_API_KEY
+    steps:
+      - checkout
+      # Install Docker
+      - run: # print the name of the branch we're on
+          name: 'What branch am I on?'
+          command: echo ${CIRCLE_BRANCH}
+
+      - run: sudo apt-get update
+      # Print value of API key
+      - run: echo $FLY_API_KEY
+      - run: curl -L https://fly.io/install.sh | sh
+      # Authenticate with fly.io
+      # - run: /home/circleci/.fly/bin/flyctl auth login -t ${FLY_API_KEY}
+      # Build the Docker image and deploy to fly.io
+      - run: |
+          cd frontend
+          docker build -t my-nextjs-app .
+          /home/circleci/.fly/bin/flyctl auth login
+          /home/circleci/.fly/bin/flyctl deploy  --remote-only
+
+workflows:
+  Final Project:
+    jobs:
+      - build
+      - dockerizeanddeploy:
+          requires:
+            - build

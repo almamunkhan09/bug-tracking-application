@@ -1,20 +1,19 @@
 'use client';
-// @ts-ignore
 import { Dialog } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 
 const navigation = [
-  { name: 'Home', href: '#' },
-  { name: 'Features', href: '#' },
-  { name: 'Company', href: '#' },
+  { name: 'Home', href: '/' },
+  { name: 'Features', href: 'features' },
+  { name: 'Contact', href: 'contact' },
 ];
 
 export default function HeroPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <div className="isolate bg-gray-900">
+    <div className="h-full bg-gray-900 ">
       <div className="absolute inset-x-0 top-[-10rem] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[-20rem]">
         <svg
           className="relative left-[calc(50%-11rem)] -z-10 h-[21.1875rem] max-w-none -translate-x-1/2 rotate-[30deg] sm:left-[calc(50%-30rem)] sm:h-[42.375rem]"
@@ -44,12 +43,8 @@ export default function HeroPage() {
         <nav className="flex items-center justify-between" aria-label="Global">
           <div className="flex lg:flex-1">
             <a href="/" className="-m-1.5 p-1.5">
-              <span className="sr-only">Your Company</span>
-              <img
-                className="h-8"
-                src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                alt=""
-              />
+              <span className="sr-only">Progresso</span>
+              <img className="h-20" src="logo.svg" alt="" />
             </a>
           </div>
           <div className="flex lg:hidden">
@@ -65,7 +60,7 @@ export default function HeroPage() {
           <div className="hidden lg:flex lg:gap-x-12">
             {navigation.map((item) => (
               <a
-                key={item.name}
+                key={`link-${item.name}`}
                 href={item.href}
                 className="text-sm font-semibold leading-6 text-white"
               >
@@ -74,7 +69,10 @@ export default function HeroPage() {
             ))}
           </div>
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-            <a href="/" className="text-sm font-semibold leading-6 text-white">
+            <a
+              href="/login"
+              className="text-sm font-semibold leading-6 text-white"
+            >
               Log in <span aria-hidden="true">&rarr;</span>
             </a>
           </div>
@@ -104,7 +102,7 @@ export default function HeroPage() {
                 <div className="space-y-2 py-6">
                   {navigation.map((item) => (
                     <a
-                      key={item.name}
+                      key={`nav-${item.name}`}
                       href={item.href}
                       className="-mx-3 block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-white hover:bg-gray-400/10"
                     >
@@ -114,7 +112,7 @@ export default function HeroPage() {
                 </div>
                 <div className="py-6">
                   <a
-                    href="/"
+                    href="/login"
                     className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-6 text-white hover:bg-gray-400/10"
                   >
                     Log in
@@ -134,18 +132,17 @@ export default function HeroPage() {
                 App
               </h1>
               <p className="mt-6 text-lg leading-8 text-gray-300">
-                Ideal for Small Teams and Solo Entrepreneurs: Manage Your
-                Projects with Ease.
+                Ideal for Small Teams and Solo Entrepreneurs. Manage Your
               </p>
               <div className="mt-10 flex items-center justify-center gap-x-6">
                 <a
-                  href="/"
+                  href="/signup"
                   className="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
                 >
                   Get started
                 </a>
                 <a
-                  href="/"
+                  href="/features"
                   className="text-sm font-semibold leading-6 text-white"
                 >
                   Learn more <span aria-hidden="true">→</span>

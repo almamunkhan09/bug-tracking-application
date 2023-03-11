@@ -1484,10 +1484,10 @@
     "@typescript-eslint/types" "5.54.1"
     eslint-visitor-keys "^3.3.0"
 
-"@upleveled/eslint-config-upleveled@^3.13.0":
-  version "3.13.0"
-  resolved "https://registry.yarnpkg.com/@upleveled/eslint-config-upleveled/-/eslint-config-upleveled-3.13.0.tgz#30f98236338ee7e318818969d537914eabfad7dc"
-  integrity sha512-josMEgMBkx5qpB8kN5JwwzM4mfbf5uX8fELuu0HFflnMO/uT4nCrC2E1J3t3iWdBfY9EUaGJ8DtH+vIIGxpALQ==
+"@upleveled/eslint-config-upleveled@^3.14.1":
+  version "3.14.1"
+  resolved "https://registry.yarnpkg.com/@upleveled/eslint-config-upleveled/-/eslint-config-upleveled-3.14.1.tgz#5cb3f84bd07c9685ace44e05f26bbd48fd0f4787"
+  integrity sha512-ia1lEGYt/ev8apMf7B0CbEqhoKT7fm7tZ0V+6MDDV6McQaWPaILbzNVPGzOy92CekDTCh93t2vrg91Dhgbwh7w==
 
 "@upleveled/eslint-plugin-upleveled@2.1.6":
   version "2.1.6"
@@ -2565,10 +2565,10 @@ eslint-plugin-testing-library@5.10.2, eslint-plugin-testing-library@^5.0.1:
   dependencies:
     "@typescript-eslint/utils" "^5.43.0"
 
-eslint-plugin-unicorn@45.0.2:
-  version "45.0.2"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-unicorn/-/eslint-plugin-unicorn-45.0.2.tgz#d6ba704793a6909fe5dfe013900d2b05b715284c"
-  integrity sha512-Y0WUDXRyGDMcKLiwgL3zSMpHrXI00xmdyixEGIg90gHnj0PcHY4moNv3Ppje/kDivdAy5vUeUr7z211ImPv2gw==
+eslint-plugin-unicorn@46.0.0:
+  version "46.0.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-unicorn/-/eslint-plugin-unicorn-46.0.0.tgz#b5cdcc9465fd6e46ab7968b87dd4a43adc8d6031"
+  integrity sha512-j07WkC+PFZwk8J33LYp6JMoHa1lXc1u6R45pbSAipjpfpb7KIGr17VE2D685zCxR5VL4cjrl65kTJflziQWMDA==
   dependencies:
     "@babel/helper-validator-identifier" "^7.19.1"
     "@eslint-community/eslint-utils" "^4.1.2"
