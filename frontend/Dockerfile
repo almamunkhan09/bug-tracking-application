@@ -17,7 +17,7 @@ RUN yq --inplace --output-format=json '.dependencies = .dependencies * (.devDepe
 
 # Install all the dependencies
 RUN yarn install --frozen-lockfile
-RUN yarn add tailwindcss@latest postcss@latest autoprefixer@latest --dev
+# RUN yarn add tailwindcss@latest postcss@latest autoprefixer@latest --dev
 
 
 # Generate the build of the application
