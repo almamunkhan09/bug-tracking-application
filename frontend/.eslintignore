@@ -1,0 +1,7 @@
+build
+
+# Next.js build folder
+.next
+tailwind.config.js
+next.config.js
+postcss.config.js
