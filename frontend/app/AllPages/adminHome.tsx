@@ -70,7 +70,7 @@ function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ');
 }
 
-export default function AdminHome() {
+export default function AdminHome({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
@@ -601,6 +601,7 @@ export default function AdminHome() {
                     </Menu.Items>
                   </Transition>
                 </Menu>
+                {children}
               </div>
             </div>
           </div>
