@@ -1367,7 +1367,7 @@
     semver "^7.3.7"
     tsutils "^3.21.0"
 
-"@typescript-eslint/experimental-utils@^5.0.0", "@typescript-eslint/experimental-utils@^5.5.0":
+"@typescript-eslint/experimental-utils@^5.5.0":
   version "5.54.1"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/experimental-utils/-/experimental-utils-5.54.1.tgz#a45609ce43fc6b24b4c4dde215446eaad7805223"
   integrity sha512-oqSc2Gr4TL/2M0XRJ9abA1o3Wf1cFJTNqWq0kjdStIIvgMQGZ3TSaFFJ2Cvy3Fgqi9UfDZ8u5idbACssIIyHaw==
@@ -1442,10 +1442,10 @@
     "@typescript-eslint/types" "5.54.1"
     eslint-visitor-keys "^3.3.0"
 
-"@upleveled/eslint-config-upleveled@^3.14.1":
-  version "3.16.0"
-  resolved "https://registry.yarnpkg.com/@upleveled/eslint-config-upleveled/-/eslint-config-upleveled-3.16.0.tgz#43630042c298d42a448c9396f1f09bab3066aefd"
-  integrity sha512-3sj8YEF56WQK7am47a0NYB5Fg7cbySgKkK548pOC0jOquMCGbjz7Toq6ZeKxQBVpzavM7Yai/ozrDOr37BVXrg==
+"@upleveled/eslint-config-upleveled@^3.19.0":
+  version "3.19.0"
+  resolved "https://registry.yarnpkg.com/@upleveled/eslint-config-upleveled/-/eslint-config-upleveled-3.19.0.tgz#2982b2aa6b1af4731c027ec44a915b3cd56a2797"
+  integrity sha512-VHythZkOuL3KHNyjjOVc3aAcTJ9nIZ11/jZIUZkZXmM24g8UFiC6PkB+e5ob0u2jrsaxO7Nvsp3zcJNoYmGSQQ==
 
 "@upleveled/eslint-plugin-upleveled@2.1.6":
   version "2.1.6"
@@ -2277,19 +2277,12 @@ eslint-plugin-import@2.27.5, eslint-plugin-import@^2.25.3:
     semver "^6.3.0"
     tsconfig-paths "^3.14.1"
 
-eslint-plugin-jest@27.2.1:
+eslint-plugin-jest@27.2.1, eslint-plugin-jest@^25.3.0:
   version "27.2.1"
   resolved "https://registry.yarnpkg.com/eslint-plugin-jest/-/eslint-plugin-jest-27.2.1.tgz#b85b4adf41c682ea29f1f01c8b11ccc39b5c672c"
   integrity sha512-l067Uxx7ZT8cO9NJuf+eJHvt6bqJyz2Z29wykyEdz/OtmcELQl2MQGQLX8J94O1cSJWAwUSEvCjwjA7KEK3Hmg==
   dependencies:
     "@typescript-eslint/utils" "^5.10.0"
-
-eslint-plugin-jest@^25.3.0:
-  version "25.7.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-jest/-/eslint-plugin-jest-25.7.0.tgz#ff4ac97520b53a96187bad9c9814e7d00de09a6a"
-  integrity sha512-PWLUEXeeF7C9QGKqvdSbzLOiLTx+bno7/HC9eefePfEb257QFHg7ye3dh80AZVkaa/RQsBB1Q/ORQvg2X7F0NQ==
-  dependencies:
-    "@typescript-eslint/experimental-utils" "^5.0.0"
 
 eslint-plugin-jsx-a11y@6.7.1, eslint-plugin-jsx-a11y@^6.5.1:
   version "6.7.1"
