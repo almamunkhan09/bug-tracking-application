@@ -1,6 +1,7 @@
 import * as dotenv from 'dotenv';
 import express, { Request, Response } from 'express';
 import { apiHealthCheck } from './routes/apiHealthCheck';
+import { projects } from './routes/project.route';
 import { users } from './routes/user.routes';
 import errorHandler from './utils/errorHandling';
 import logger from './utils/logger'; // This is Logger file created based on pino for pretty logging
@@ -13,6 +14,7 @@ const port = process.env.PORT || 3500;
 
 app.use('/api/status', apiHealthCheck); // Api healthcheck for the server check
 app.use('/api/users', users);
+app.use('/api/projects', projects);
 
 app.get('/', (req: Request, res: Response) => {
   res
