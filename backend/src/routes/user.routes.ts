@@ -16,7 +16,7 @@ users.get('/', async (req: Request, res: Response) => {
   }
 });
 
-users.post('/signup', userValidate, createUser);
+users.post('/', userValidate, createUser);
 
-users.put('/update/:id', updateUser);
-users.delete('/delete/:id', deleteUser);
+users.put('/:id', updateUser);
+users.delete('/:id', deleteUser);

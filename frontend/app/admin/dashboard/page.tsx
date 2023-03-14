@@ -1,8 +1,7 @@
-import AdminHome from '@/app/AllPages/adminHome';
-import React from 'react';
+import AdminPageTitle from '@/components/adminPageTitle';
 
 function page() {
-  return <AdminHome />;
+  return <AdminPageTitle />;
 }
 
 export default page;
