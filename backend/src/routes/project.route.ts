@@ -8,5 +8,5 @@ export const projects = Router();
 
 projects.get('/:id', projectById);
 projects.post('/', createProject);
-projects.put('/', updateProject);
-projects.delete('/', deleteProject);
+projects.put('/:id', updateProject);
+projects.delete('/:id', deleteProject);

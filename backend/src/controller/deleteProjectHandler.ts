@@ -23,7 +23,7 @@ export default async function deleteProject(req: Request, res: Response) {
       where: { id },
     });
 
-    res.status(204).send();
+    res.status(204).json({ message: 'Succesful' });
   } catch (error: any) {
     res.status(400).json({ error: error.message });
   }

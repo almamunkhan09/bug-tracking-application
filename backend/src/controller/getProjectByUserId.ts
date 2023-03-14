@@ -10,11 +10,11 @@ import prisma from '../../prisma';
 // }
 
 export default async function projectByUserId(req: Request, res: Response) {
-  const { userId } = req.params;
+  const { id } = req.params;
 
   try {
     const userExists = await prisma.user.findUnique({
-      where: { id: userId },
+      where: { id: id },
     });
 
     if (!userExists) {
@@ -25,11 +25,11 @@ export default async function projectByUserId(req: Request, res: Response) {
     const projects = await prisma.project.findMany({
       where: {
         OR: [
-          { createdById: userId },
+          { createdById: id },
           {
             maintainers: {
               some: {
-                id: userId,
+                id: id,
               },
             },
           },
