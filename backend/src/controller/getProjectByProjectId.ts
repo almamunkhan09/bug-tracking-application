@@ -18,6 +18,7 @@ export default async function projectById(req: Request, res: Response) {
       include: {
         createdBy: true,
         maintainers: true,
+        issues: true,
       },
     });
 

@@ -17,8 +17,6 @@ export default async function createProject(req: Request, res: Response) {
   const { title, description, createdById, maintainerIds }: NewProject =
     req.body;
 
-  console.log(maintainerIds);
-
   try {
     const newProject = await prisma.project.create({
       data: {
