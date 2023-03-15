@@ -1,12 +1,18 @@
 import { NextFunction, Request, Response } from 'express';
 import { userSchema } from '../models/userSchema';
 
+type NewUser = {
+  name: string;
+  email: string;
+  password: string;
+  profilePicture: string;
+};
 export const userValidate = async (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
-  const newUser = {
+  const newUser: NewUser = {
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,

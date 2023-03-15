@@ -43,7 +43,7 @@ export default async function createUser(req: Request, res: Response) {
     }
 
     const salt = await bcrypt.genSalt(saltValue);
-    const hash = bcrypt.hashSync(newUser.password, salt);
+    const hash = bcrypt.hashSync(newUser.password.trim(), salt);
     newUser.password = hash;
 
     const result = await prisma.user.create({

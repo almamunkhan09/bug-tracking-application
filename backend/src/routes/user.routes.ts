@@ -2,6 +2,9 @@ import { Request, Response, Router } from 'express';
 import prisma from '../../prisma';
 import createUser from '../controller/crerateUserHandler';
 import deleteUser from '../controller/deleteUserHandler';
+import getAssignedIssues from '../controller/getIssuesAssignedToUser';
+import getIssuesByReporter from '../controller/getIssuesCreatedByUser';
+import projectByUserId from '../controller/getProjectByUserId';
 import updateUser from '../controller/updateUserHadler';
 import { userValidate } from '../middleWares/userInputValidation';
 
@@ -16,7 +19,10 @@ users.get('/', async (req: Request, res: Response) => {
   }
 });
 
-users.post('/signup', userValidate, createUser);
+users.post('/', userValidate, createUser);
 
-users.put('/update/:id', updateUser);
-users.delete('/delete/:id', deleteUser);
+users.put('/:id', updateUser);
+users.delete('/:id', deleteUser);
+users.get('/:id/projects', projectByUserId);
+users.get('/:id/userissues', getIssuesByReporter);
+users.get('/:id/assignedIssue', getAssignedIssues);
