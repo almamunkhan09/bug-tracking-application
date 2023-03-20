@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 // import { omit } from 'lodash';
-import prisma from '../../prisma';
+import { getProjectById } from './project-services';
 
 // interface NewUser {
 //   name: string;
@@ -13,21 +13,17 @@ export default async function projectById(req: Request, res: Response) {
   const { id } = req.params;
 
   try {
-    const project = await prisma.project.findUnique({
-      where: { id },
-      include: {
-        createdBy: true,
-        maintainers: true,
-        issues: true,
-      },
-    });
-
-    if (!project) {
+    const result = await getProjectById(id);
+    if (!result) {
       res.status(404).json({ error: 'Project not found' });
       return;
     }
+    const response = {
+      ...result,
+      message: 'Get the project Successfully',
+    };
 
-    res.status(200).json(project);
+    res.status(200).json(response);
   } catch (error: any) {
     res.status(400).json({ error: error.message });
   }

@@ -7,6 +7,7 @@ export default function errorHandler(
   next: NextFunction,
 ) {
   if (err) {
+    console.log(err);
     res.status(400).json({
       messsage:
         'Ops an error occured. Refresh and retry.If the erro persists please contact us',
