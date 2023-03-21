@@ -1,5 +1,5 @@
 import '../globals.css';
-import AdminHome from '../customLayouts/adminHome';
+import CustomLayout from './CustomLayout';
 
 export const metadata = {
   title: 'Progesso',
@@ -14,9 +14,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head />
-
       <body>
-        <AdminHome>{children}</AdminHome>
+        <CustomLayout>{children}</CustomLayout>
       </body>
     </html>
   );

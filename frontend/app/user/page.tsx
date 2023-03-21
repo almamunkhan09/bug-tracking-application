@@ -1,7 +1,7 @@
 import React from 'react';
 
 function page() {
-  return <div>Hello from the user dashBoard</div>;
+  return <div>page</div>;
 }
 
 export default page;
