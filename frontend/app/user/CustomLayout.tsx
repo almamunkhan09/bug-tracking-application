@@ -5,14 +5,15 @@ import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import {
   Bars3BottomLeftIcon,
   BellIcon,
-  CalendarIcon,
+  BugAntIcon,
   ChartBarIcon,
   FolderIcon,
   HomeIcon,
-  InboxIcon,
   UsersIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 /*
   This example requires some changes to your config:
 
@@ -29,26 +30,63 @@ import {
 */
 import { Fragment, ReactNode, useState } from 'react';
 
+function twoWordName(name: string) {
+  const nameArray: string[] = name.split(' ');
+  return `${nameArray[0][0]}${nameArray[1][0]}`;
+}
+
+const user = {
+  id: '1',
+  name: 'Al Mamun khan',
+  isAdmin: true,
+  profilePicture:
+    'https://res.cloudinary.com/dubm2ec8s/image/upload/v1679444754/Pregressp_1_ksqyg5.svg',
+  email: 'almamunkhan09@gmail.com',
+};
+
 const navigation = [
-  { name: 'Dashboard', href: '#', icon: HomeIcon, current: true },
-  { name: 'Team', href: '#', icon: UsersIcon, current: false },
-  { name: 'Projects', href: '#', icon: FolderIcon, current: false },
-  { name: 'Calendar', href: '#', icon: CalendarIcon, current: false },
-  { name: 'Documents', href: '#', icon: InboxIcon, current: false },
-  { name: 'Reports', href: '#', icon: ChartBarIcon, current: false },
-];
-const userNavigation = [
-  { name: 'Your Profile', href: '#' },
-  { name: 'Settings', href: '#' },
-  { name: 'Sign out', href: '#' },
+  { name: 'Dashboard', href: '/user', icon: HomeIcon, current: true },
+  {
+    name: 'Projects',
+    href: '/user/projects',
+    icon: FolderIcon,
+    current: false,
+  },
+  // { name: 'Calendar', href: '#', icon: CalendarIcon, current: false },
+  // { name: 'Documents', href: '#', icon: InboxIcon, current: false },
+  {
+    name: 'Reports',
+    href: '/user/reports',
+    icon: ChartBarIcon,
+    current: false,
+  },
+  { name: 'Issues', href: '/user/issues', icon: BugAntIcon, current: false },
 ];
 
-function classNames(...classes) {
+if (user.isAdmin === true) {
+  navigation.push({
+    name: 'Team',
+    href: '/user/team',
+    icon: UsersIcon,
+    current: false,
+  });
+}
+const userNavigation = [
+  { name: 'Your Profile', href: `/user/${user.id}/profile` },
+  { name: 'Sign out', href: `/user/logout/${user.id}` },
+];
+
+function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
 }
 
 export default function CustomLayout({ children }: { children: ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const pathName = usePathname();
+  navigation.map((nav) => {
+    if (nav.href === pathName) return (nav.current = true);
+    else return (nav.current = false);
+  });
 
   return (
     <>
@@ -116,15 +154,15 @@ export default function CustomLayout({ children }: { children: ReactNode }) {
                   <div className="flex flex-shrink-0 items-center px-4">
                     <img
                       className="h-8 w-auto"
-                      src="logo.svg"
+                      src="https://res.cloudinary.com/dubm2ec8s/image/upload/v1679444754/Pregressp_1_ksqyg5.svg"
                       alt="Your Company"
                     />
                   </div>
                   <div className="mt-5 h-0 flex-1 overflow-y-auto">
                     <nav className="space-y-1 px-2">
                       {navigation.map((item) => (
-                        <a
-                          key={item.name}
+                        <Link
+                          key={`key-${item.name}`}
                           href={item.href}
                           className={classNames(
                             item.current
@@ -143,7 +181,7 @@ export default function CustomLayout({ children }: { children: ReactNode }) {
                             aria-hidden="true"
                           />
                           {item.name}
-                        </a>
+                        </Link>
                       ))}
                     </nav>
                   </div>
@@ -161,12 +199,16 @@ export default function CustomLayout({ children }: { children: ReactNode }) {
           {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className="flex min-h-0 flex-1 flex-col bg-gray-800">
             <div className="flex h-16 flex-shrink-0 items-center bg-gray-900 px-4">
-              <img className="h-8 w-auto" src="logo.svg" alt="Your Company" />
+              <img
+                className="h-8 w-auto"
+                src="https://res.cloudinary.com/dubm2ec8s/image/upload/v1679444754/Pregressp_1_ksqyg5.svg"
+                alt="Your Company"
+              />
             </div>
             <div className="flex flex-1 flex-col overflow-y-auto">
               <nav className="flex-1 space-y-1 px-2 py-4">
                 {navigation.map((item) => (
-                  <a
+                  <Link
                     key={item.name}
                     href={item.href}
                     className={classNames(
@@ -186,7 +228,7 @@ export default function CustomLayout({ children }: { children: ReactNode }) {
                       aria-hidden="true"
                     />
                     {item.name}
-                  </a>
+                  </Link>
                 ))}
               </nav>
             </div>
@@ -239,11 +281,19 @@ export default function CustomLayout({ children }: { children: ReactNode }) {
                   <div>
                     <Menu.Button className="flex max-w-xs items-center rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                       <span className="sr-only">Open user menu</span>
-                      <img
-                        className="h-8 w-8 rounded-full"
-                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                        alt=""
-                      />
+                      {user.profilePicture ? (
+                        <img
+                          className="mx-auto h-8 w-8 rounded-full"
+                          src={user.profilePicture}
+                          alt=""
+                        />
+                      ) : (
+                        <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-500">
+                          <span className="text-sm font-medium leading-none text-white">
+                            {twoWordName(user.name)}
+                          </span>
+                        </span>
+                      )}
                     </Menu.Button>
                   </div>
                   <Transition
@@ -259,7 +309,7 @@ export default function CustomLayout({ children }: { children: ReactNode }) {
                       {userNavigation.map((item) => (
                         <Menu.Item key={item.name}>
                           {({ active }) => (
-                            <a
+                            <Link
                               href={item.href}
                               className={classNames(
                                 active ? 'bg-gray-100' : '',
@@ -267,7 +317,7 @@ export default function CustomLayout({ children }: { children: ReactNode }) {
                               )}
                             >
                               {item.name}
-                            </a>
+                            </Link>
                           )}
                         </Menu.Item>
                       ))}
@@ -277,8 +327,14 @@ export default function CustomLayout({ children }: { children: ReactNode }) {
               </div>
             </div>
           </div>
-
-          {children}
+          <main className="flex-1">
+            <div className="py-10 mx-auto px-6">
+              {/* <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"> */}
+              {/* Your content */}
+              {children}
+              {/* </div> */}
+            </div>
+          </main>
         </div>
       </div>
     </>
