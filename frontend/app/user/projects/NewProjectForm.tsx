@@ -1,13 +1,10 @@
 'use client';
 import { Dialog, Transition } from '@headlessui/react';
-import {
-  LinkIcon,
-  PlusIcon,
-  QuestionMarkCircleIcon,
-} from '@heroicons/react/20/solid';
+import { PlusIcon } from '@heroicons/react/20/solid';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import { Fragment, useState } from 'react';
+import { Fragment } from 'react';
+import MemberSelect from './MemberSelect';
 
 const team = [
   {
@@ -141,6 +138,10 @@ export default function NewProjectForm({ open, setOpen }: AppProps) {
                                 Team Members
                               </h3>
                               <div className="mt-2">
+                                <MemberSelect />
+                              </div>
+
+                              {/* <div className="mt-2">
                                 <div className="flex space-x-2">
                                   {team.map((person) => (
                                     <a
@@ -168,6 +169,17 @@ export default function NewProjectForm({ open, setOpen }: AppProps) {
                                     />
                                   </button>
                                 </div>
+                              </div> */}
+                            </div>
+                            <div>
+                              <h3 className="text-sm font-medium leading-6 text-gray-900">
+                                Deadline
+                              </h3>
+                              <div className="mt-2">
+                                <input
+                                  type="date"
+                                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                />
                               </div>
                             </div>
                           </div>
