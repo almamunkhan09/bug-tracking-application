@@ -18,7 +18,10 @@ import { Fragment, ReactNode, useState } from 'react';
 
 function twoWordName(name: string) {
   const nameArray: string[] = name.split(' ');
-  return `${nameArray[0][0]}${nameArray[1][0]}`;
+
+  return nameArray.length > 1
+    ? `${nameArray[0][0]}${nameArray[1][0]}`
+    : nameArray[0][0];
 }
 
 const user = {

@@ -1,7 +1,8 @@
+import StatCard from '@/components/StatCard';
 import React from 'react';
 
 function page() {
-  return <div>page</div>;
+  return <StatCard />;
 }
 
 export default page;
