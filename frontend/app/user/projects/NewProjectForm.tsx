@@ -140,36 +140,6 @@ export default function NewProjectForm({ open, setOpen }: AppProps) {
                               <div className="mt-2">
                                 <MemberSelect />
                               </div>
-
-                              {/* <div className="mt-2">
-                                <div className="flex space-x-2">
-                                  {team.map((person) => (
-                                    <a
-                                      key={`key-${person.email}`}
-                                      href={person.href}
-                                      className="rounded-full hover:opacity-75"
-                                    >
-                                      <img
-                                        className="inline-block h-8 w-8 rounded-full"
-                                        src={person.imageUrl}
-                                        alt={person.name}
-                                      />
-                                    </a>
-                                  ))}
-                                  <button
-                                    type="button"
-                                    className="inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border-2 border-dashed border-gray-200 bg-white text-gray-400 hover:border-gray-300 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                                  >
-                                    <span className="sr-only">
-                                      Add team member
-                                    </span>
-                                    <PlusIcon
-                                      className="h-5 w-5"
-                                      aria-hidden="true"
-                                    />
-                                  </button>
-                                </div>
-                              </div> */}
                             </div>
                             <div>
                               <h3 className="text-sm font-medium leading-6 text-gray-900">
@@ -178,6 +148,7 @@ export default function NewProjectForm({ open, setOpen }: AppProps) {
                               <div className="mt-2">
                                 <input
                                   type="date"
+                                  min={new Date().toISOString().split('T')[0]}
                                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                 />
                               </div>

@@ -14,20 +14,6 @@ import {
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-/*
-  This example requires some changes to your config:
-
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
-*/
 import { Fragment, ReactNode, useState } from 'react';
 
 function twoWordName(name: string) {
@@ -72,7 +58,7 @@ if (user.isAdmin === true) {
   });
 }
 const userNavigation = [
-  { name: 'Your Profile', href: `/user/${user.id}/profile` },
+  { name: 'Your Profile', href: `/user/profile` },
   { name: 'Sign out', href: `/user/logout/${user.id}` },
 ];
 
@@ -209,7 +195,7 @@ export default function CustomLayout({ children }: { children: ReactNode }) {
               <nav className="flex-1 space-y-1 px-2 py-4">
                 {navigation.map((item) => (
                   <Link
-                    key={item.name}
+                    key={`key-${item.name}`}
                     href={item.href}
                     className={classNames(
                       item.current
@@ -307,7 +293,7 @@ export default function CustomLayout({ children }: { children: ReactNode }) {
                   >
                     <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                       {userNavigation.map((item) => (
-                        <Menu.Item key={item.name}>
+                        <Menu.Item key={`key-${item.name}`}>
                           {({ active }) => (
                             <Link
                               href={item.href}
@@ -328,12 +314,7 @@ export default function CustomLayout({ children }: { children: ReactNode }) {
             </div>
           </div>
           <main className="flex-1">
-            <div className="py-10 mx-auto px-6">
-              {/* <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"> */}
-              {/* Your content */}
-              {children}
-              {/* </div> */}
-            </div>
+            <div className="py-10 mx-auto px-6">{children}</div>
           </main>
         </div>
       </div>

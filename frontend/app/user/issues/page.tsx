@@ -1,7 +1,8 @@
 import React from 'react';
+import IssuesTable from './IssuesTable';
 
 function page() {
-  return <div>It will be a list associated with the user</div>;
+  return <IssuesTable />;
 }
 
 export default page;
