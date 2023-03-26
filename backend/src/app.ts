@@ -1,3 +1,4 @@
+import cors from 'cors';
 import * as dotenv from 'dotenv';
 import express, { Request, Response } from 'express';
 import { comments } from './comment/comment.route';
@@ -9,10 +10,11 @@ import errorHandler from './utils/errorHandling';
 import logger from './utils/logger'; // This is Logger file created based on pino for pretty logging
 
 dotenv.config(); // Configure the dotenv for using enviornment variable
+const port = process.env.PORT || 3500;
 
 const app = express();
 app.use(express.json());
-const port = process.env.PORT || 3500;
+app.use(cors());
 
 app.use('/api/status', apiHealthCheck); // Api healthcheck for the server check
 app.use('/api/users', users);

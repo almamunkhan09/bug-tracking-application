@@ -14,7 +14,15 @@ export const users = Router();
 
 users.get('/', async (req: Request, res: Response) => {
   try {
-    const allUsers = await prisma.user.findMany();
+    const allUsers = await prisma.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        isAdmin: true,
+        profilePicture: true,
+      },
+    });
     res.status(200).json(allUsers);
   } catch (err: any) {
     throw new Error(err);
