@@ -15,15 +15,19 @@
     "@heroicons/react": "^2.0.16",
     "@tailwindcss/forms": "^0.5.3",
     "daisyui": "^2.51.3",
+    "emailjs-com": "^3.2.0",
     "next": "13.2.3",
     "patch-package": "^6.5.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-hook-form": "^7.43.8",
     "react-icons": "^4.8.0",
     "react-select": "^5.7.0",
     "sass": "^1.58.3",
     "sharp": "^0.31.3",
-    "typescript": "4.9.5"
+    "typescript": "4.9.5",
+    "uniqolor": "^1.1.0",
+    "yup": "^1.0.2"
   },
   "devDependencies": {
     "@babel/eslint-parser": "7.19.1",

@@ -1,10 +1,10 @@
 import * as dotenv from 'dotenv';
 import express, { Request, Response } from 'express';
+import { comments } from './comment/comment.route';
+import { issues } from './Issue/issues.route';
+import { projects } from './project/project.route';
 import { apiHealthCheck } from './routes/apiHealthCheck';
-import { comments } from './routes/comment.route';
-import { issues } from './routes/issues.route';
-import { projects } from './routes/project.route';
-import { users } from './routes/user.routes';
+import { users } from './user/user-route';
 import errorHandler from './utils/errorHandling';
 import logger from './utils/logger'; // This is Logger file created based on pino for pretty logging
 
