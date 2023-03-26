@@ -7,7 +7,7 @@ const projects = [
     title: 'Graph ql Api',
     description: 'Hello we are working on graphql api ',
     createdBy: 'Al Mamun Khan',
-    maintainers: ['Al Mamun Khan', 'Majharrul islam'],
+    maintainers: ['Al Mamun Khan'],
   },
   {
     id: '12346',
