@@ -1,5 +1,5 @@
 'use client';
-import { EnvelopeIcon, PhoneIcon, UserIcon } from '@heroicons/react/20/solid';
+import { EnvelopeIcon, UserIcon } from '@heroicons/react/20/solid';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
@@ -9,6 +9,7 @@ type PeopleType = {
   isAdmin: boolean;
   email: string;
   profilePicture: string;
+  createdAt: Date;
 }[];
 
 export default function TeamComponent() {
@@ -18,6 +19,7 @@ export default function TeamComponent() {
       .get('http://localhost:3600/api/users/')
       .then((response) => {
         setPeople1(response.data);
+        console.log(response.data);
         // Do something with the response data
       })
       .catch((error) => {

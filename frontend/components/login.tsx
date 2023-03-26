@@ -3,7 +3,7 @@ import { FaGithub, FaGoogle } from 'react-icons/fa';
 
 export default function Login() {
   return (
-    <div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8 mb-auto bg-gray-900">
+    <div className="flex  flex-col justify-center py-12 sm:px-6 lg:px-8 mb-auto bg-gray-900">
       <div className="sm:mx-auto sm:w-full sm:max-w-md mt-1">
         <img
           className="mx-auto h-20 w-auto"

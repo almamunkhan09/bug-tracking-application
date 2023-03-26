@@ -21,6 +21,7 @@ users.get('/', async (req: Request, res: Response) => {
         email: true,
         isAdmin: true,
         profilePicture: true,
+        createdAt: true,
       },
     });
     res.status(200).json(allUsers);
