@@ -1,7 +1,7 @@
 'use client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useRouter } from 'next/navigation';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 // import { FaGithub, FaGoogle } from 'react-icons/fa'; // kept for future devlopment
 import * as yup from 'yup';
@@ -24,6 +24,13 @@ const schema = yup.object().shape({
 });
 
 export default function SignUp() {
+  useEffect(() => {
+    return () => {
+      // This function is called when the component is unmounted
+      return;
+    };
+  }, []);
+
   const router = useRouter();
   const {
     register,

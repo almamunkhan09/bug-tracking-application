@@ -6,9 +6,9 @@ import varifyUser from '../middleWares/varifyUser';
 import createUser from './user-create-handler';
 import projectByUserId from './user-created-project-handler';
 import deleteUser from './user-delete-handler';
+import userLogin from './user-login-handler';
 import { updateValidate, userValidate } from './user-middlewares';
 import updateUser from './user-update-handler';
-import userLogin from './userLoginHandler';
 
 export const users = Router();
 

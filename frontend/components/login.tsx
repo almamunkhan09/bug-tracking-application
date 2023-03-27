@@ -32,7 +32,7 @@ export default function Login() {
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     console.log(data);
-    router.push('/login');
+    router.push('/user');
     reset();
   };
   return (

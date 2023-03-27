@@ -17,6 +17,7 @@ export default function varifyUser(
   next: NextFunction,
 ) {
   const authTocken = req.headers.authorization?.split(' ')[1];
+
   let secret;
   if (process.env.JWT_SECRET !== undefined) {
     secret = process.env.JWT_SECRET;
@@ -27,9 +28,10 @@ export default function varifyUser(
   try {
     if (authTocken) {
       const varifiedUser = jwt.verify(authTocken, secret);
-      console.log(varifiedUser);
       req.user = varifiedUser;
       next();
+    } else {
+      return res.status(404).json({ message: 'No token found' });
     }
   } catch (err: any) {
     log.error(err);

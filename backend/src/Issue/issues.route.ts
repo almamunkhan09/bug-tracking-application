@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import createIssue from './createIssue';
 import deleteIssue from './deleteIssueHandler';
-import getIssueByIssueId from './getIssueByIssueId';
+import createIssue from './issue-create-handler';
+import getIssueByIssueId from './issue-get-by-id';
 import updateIssue from './updateIssueHandler';
 
 export const issues = Router();

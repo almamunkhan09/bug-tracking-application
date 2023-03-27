@@ -10,6 +10,7 @@ export const userValidate = async (
     await userSchema.validateAsync(req.body);
     next();
   } catch (err) {
+    console.log(err);
     res.status(422).json({ message: 'User input is not valid' });
   }
 };
