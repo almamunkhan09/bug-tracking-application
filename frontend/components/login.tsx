@@ -1,23 +1,56 @@
-import Link from 'next/link';
-import { FaGithub, FaGoogle } from 'react-icons/fa';
+'use client';
+import { yupResolver } from '@hookform/resolvers/yup';
+// import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import React from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+// import { FaGithub, FaGoogle } from 'react-icons/fa';
+import * as yup from 'yup';
+
+// import Footer from './footer';
+
+type Inputs = {
+  email: string;
+  password: string;
+};
+
+const schema = yup.object().shape({
+  email: yup.string().email().required(),
+  password: yup.string().required().min(8, 'Minimum 8 charcters'),
+});
 
 export default function Login() {
+  const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<Inputs>({
+    resolver: yupResolver(schema),
+  });
+
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    console.log(data);
+    router.push('/login');
+    reset();
+  };
   return (
-    <div className="flex  flex-col justify-center py-12 sm:px-6 lg:px-8 mb-auto bg-gray-900">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md mt-1">
+    <div className="flex  flex-col justify-center py-12 sm:px-6 lg:px-8  bg-gray-900 h-screen">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md mt-1 ">
         <img
           className="mx-auto h-20 w-auto"
           src="logo.svg"
           alt="Your Company"
         />
-        <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
+        <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-white">
           Sign in to your account
         </h2>
       </div>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md mb-auto">
         <div className="bg-white py-10 px-4 shadow sm:rounded-lg sm:px-10 mb-11">
-          <form className="space-y-6" action="#" method="POST">
+          <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
             <div>
               <label
                 htmlFor="email"
@@ -28,12 +61,12 @@ export default function Login() {
               <div className="mt-2">
                 <input
                   id="email"
-                  name="email"
                   type="email"
                   autoComplete="email"
-                  required
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  {...register('email')}
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 mb-2"
                 />
+                {errors.email?.message}
               </div>
             </div>
 
@@ -47,16 +80,16 @@ export default function Login() {
               <div className="mt-2">
                 <input
                   id="password"
-                  name="password"
                   type="password"
                   autoComplete="current-password"
-                  required
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  {...register('password')}
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 mb-2"
                 />
+                {errors.password?.message}
               </div>
             </div>
 
-            <div className="flex items-center justify-between">
+            {/* <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <input
                   id="remember-me"
@@ -80,7 +113,7 @@ export default function Login() {
                   Forgot your password?
                 </Link>
               </div>
-            </div>
+            </div> */}
 
             <div>
               <button
@@ -92,7 +125,7 @@ export default function Login() {
             </div>
           </form>
 
-          <div className="mt-6">
+          {/* <div className="mt-6">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-gray-300" />
@@ -102,9 +135,9 @@ export default function Login() {
                   Or continue with
                 </span>
               </div>
-            </div>
+            </div> */}
 
-            <div className="mt-6 grid grid-cols-2 gap-3">
+          {/* <div className="mt-6 grid grid-cols-2 gap-3">
               <div>
                 <Link
                   href="/login"
@@ -138,8 +171,8 @@ export default function Login() {
                   </svg>
                 </Link>
               </div>
-            </div>
-          </div>
+            </div> */}
+          {/* </div> */}
         </div>
       </div>
     </div>

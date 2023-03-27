@@ -1,10 +1,9 @@
 'use client';
 import { yupResolver } from '@hookform/resolvers/yup';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { FaGithub, FaGoogle } from 'react-icons/fa';
+// import { FaGithub, FaGoogle } from 'react-icons/fa'; // kept for future devlopment
 import * as yup from 'yup';
 
 type Inputs = {
@@ -22,8 +21,6 @@ const schema = yup.object().shape({
   confirmPassword: yup
     .string()
     .oneOf([yup.ref('password')], 'Passwords must match'),
-
-  // password: yup.string().min(8).max(32).required(),
 });
 
 export default function SignUp() {
@@ -36,12 +33,7 @@ export default function SignUp() {
   } = useForm<Inputs>({
     resolver: yupResolver(schema),
   });
-  // const handleSignup: SubmitHandler<Inputs> = () => {
-  //   // console.log(data);
-  //   router.push('/thankyou');
 
-  //   reset();
-  // };
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     console.log(data);
     router.push('/login');
@@ -49,10 +41,10 @@ export default function SignUp() {
     reset();
   };
   return (
-    <div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8 mb-auto  bg-gray-900">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md mt-1">
+    <div className="flex flex-col justify-center  sm:px-6 lg:px-8 bg-gray-900 h-screen">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md ">
         <img className="mx-auto h-20 w-auto" src="logo.svg" alt="Progresso" />
-        <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-white">
+        <h2 className="mt-4 text-center text-3xl font-bold tracking-tight text-white">
           Signup
         </h2>
       </div>
@@ -152,16 +144,13 @@ export default function SignUp() {
             </div> */}
 
             <div>
-              <button
-                type="submit"
-                className="flex w-full justify-center rounded-md bg-indigo-600 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
+              <button className="flex w-full justify-center rounded-md bg-indigo-600 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                 Sign Up
               </button>
             </div>
           </form>
 
-          <div className="mt-6">
+          {/* <div className="mt-6">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-gray-300" />
@@ -171,9 +160,9 @@ export default function SignUp() {
                   Or continue with
                 </span>
               </div>
-            </div>
+            </div> */}
 
-            <div className="mt-6 grid grid-cols-2 gap-3">
+          {/* <div className="mt-6 grid grid-cols-2 gap-3">
               <div>
                 <Link
                   href="/login"
@@ -207,8 +196,8 @@ export default function SignUp() {
                   </svg>
                 </Link>
               </div>
-            </div>
-          </div>
+            </div> */}
+          {/* </div> */}
         </div>
       </div>
     </div>
