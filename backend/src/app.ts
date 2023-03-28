@@ -1,3 +1,4 @@
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import * as dotenv from 'dotenv';
 import express, { Request, Response } from 'express';
@@ -13,8 +14,9 @@ dotenv.config(); // Configure the dotenv for using enviornment variable
 const port = process.env.PORT || 3500;
 
 const app = express();
-app.use(express.json());
 app.use(cors());
+app.use(express.json());
+app.use(cookieParser());
 
 app.use('/api/status', apiHealthCheck); // Api healthcheck for the server check
 app.use('/api/users', users);

@@ -7,6 +7,10 @@ export default async function updateUser(req: Request, res: Response) {
   try {
     const { id } = req.params;
 
+    if (id !== req.user.id && !req.user.isAdmin) {
+      return res.status(403).json({ err: 'Not allowed to do this action' });
+    }
+
     const existedData = await userDataById(id);
     if (!existedData) {
       return res.status(404).json({

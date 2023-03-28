@@ -16,7 +16,8 @@ export default function varifyUser(
   res: Response,
   next: NextFunction,
 ) {
-  const authTocken = req.headers.authorization?.split(' ')[1];
+  const cookies = req.headers.cookie;
+  const authTocken = cookies?.split('=')[1];
 
   let secret;
   if (process.env.JWT_SECRET !== undefined) {

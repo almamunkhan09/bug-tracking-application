@@ -32,7 +32,7 @@ users.get('/', async (req: Request, res: Response) => {
 
 users.post('/', userValidate, createUser);
 users.post('/login', userLogin);
-users.put('/:id', updateValidate, updateUser);
+users.put('/:id', updateValidate, varifyUser, updateUser);
 users.delete('/:id', varifyUser, deleteUser);
 users.get('/:id/projects', projectByUserId);
 users.get('/:id/userissues', getIssuesByReporter);

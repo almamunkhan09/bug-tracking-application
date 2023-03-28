@@ -12,7 +12,7 @@ export default async function createHandler(req: Request, res: Response) {
     };
     const isUserExist = Boolean(await userData(newUser.email));
     if (isUserExist) {
-      return res.status(401).json({
+      return res.status(409).json({
         message: 'Email is already in use',
       });
     }

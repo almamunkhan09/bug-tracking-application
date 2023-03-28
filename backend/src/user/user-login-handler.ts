@@ -29,14 +29,14 @@ export default async function userLogin(req: Request, res: Response) {
       },
     });
     if (!user) {
-      return res.status(400).json({
+      return res.status(401).json({
         message: 'Email or Password does not match',
       });
     }
 
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {
-      return res.status(400).json({
+      return res.status(401).json({
         message: 'Email or Password does not match',
       });
     }
@@ -44,15 +44,19 @@ export default async function userLogin(req: Request, res: Response) {
     const accessTocken = jwt.sign(
       { id: user.id, isAdmin: user.isAdmin },
       secret,
-      { expiresIn: 1000 * 60 * 30 },
+      { expiresIn: '1hr' },
     );
     const loginData = {
       id: user.id,
       isAdmin: user.isAdmin,
       name: user.name,
-      accessTocken,
     };
-
+    res.cookie(String(user.id), accessTocken, {
+      path: '/',
+      expires: new Date(Date.now() + 1000 * 60 * 30),
+      httpOnly: true,
+      sameSite: 'lax',
+    });
     res.status(200).json(loginData);
   } catch (err: any) {
     log.error(err);
