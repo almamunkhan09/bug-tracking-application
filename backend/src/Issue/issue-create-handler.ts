@@ -1,7 +1,7 @@
 // src/routes/createIssue.ts
 
 import { Request, Response } from 'express';
-import prisma from '../../prisma';
+import { createIssue } from './issue-services';
 
 interface NewIssue {
   title: string;
@@ -13,7 +13,7 @@ interface NewIssue {
   relatedProjectIds: string;
 }
 
-export default async function createIssue(req: Request, res: Response) {
+export default async function createIssueHandler(req: Request, res: Response) {
   const {
     title,
     description,
@@ -25,32 +25,22 @@ export default async function createIssue(req: Request, res: Response) {
   }: NewIssue = req.body;
 
   try {
-    const newIssue = await prisma.issue.create({
-      data: {
-        title,
-        description,
-        status: status || 'open',
-        priority: priority || 'low',
-        reporter: { connect: { id: reporterId } },
-        assignees: { connect: assigneeIds.map((id) => ({ id })) },
-        relatedProject: { connect: { id: relatedProjectIds } },
-      },
-      include: {
-        reporter: {
-          select: {
-            name: true,
-          },
-        },
-        assignees: {
-          select: {
-            name: true,
-          },
-        },
-        relatedProject: true,
-      },
+    const result = await createIssue({
+      title,
+      description,
+      status,
+      priority,
+      reporterId,
+      assigneeIds,
+      relatedProjectIds,
     });
 
-    res.status(201).json(newIssue);
+    const response = {
+      ...result,
+      message: 'Issue created Succefully',
+    };
+
+    res.status(201).json(response);
   } catch (error: any) {
     res.status(400).json({ error: error.message });
   }

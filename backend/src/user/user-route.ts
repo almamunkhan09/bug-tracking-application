@@ -1,8 +1,8 @@
 import { Request, Response, Router } from 'express';
-import prisma from '../../prisma';
-import getAssignedIssues from '../Issue/getIssuesAssignedToUser';
-import getIssuesByReporter from '../Issue/getIssuesCreatedByUser';
+import getAssignedIssues from '../Issue/issue-get-by-assignee';
+import getIssuesByReporter from '../Issue/issue-get-by-reporter-id';
 import varifyUser from '../middleWares/varifyUser';
+import prisma from '../prisma';
 import createUser from './user-create-handler';
 import projectByUserId from './user-created-project-handler';
 import deleteUser from './user-delete-handler';

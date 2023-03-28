@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import * as dotenv from 'dotenv';
-import prisma from '../../prisma';
+import prisma from '../prisma';
 import { NewUser, UpdateData } from './user-types';
 
 dotenv.config();

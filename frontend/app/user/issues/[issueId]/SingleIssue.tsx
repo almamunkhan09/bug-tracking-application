@@ -212,10 +212,7 @@ function SingleIssue() {
                               </div>
                               <div>
                                 <div className="text-sm">
-                                  <div
-                                    href="#"
-                                    className="font-medium text-gray-900"
-                                  >
+                                  <div className="font-medium text-gray-900">
                                     {comment.name}
                                   </div>
                                 </div>

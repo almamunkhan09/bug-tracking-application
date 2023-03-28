@@ -4,6 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
+    "pro": "tsc && node dist/app.js",
     "start": "nodemon src/app.ts",
     "dev": "ts-node-dev --respawn --transpile-only src/app.ts"
   },

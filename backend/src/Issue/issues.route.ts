@@ -1,12 +1,13 @@
 import { Router } from 'express';
-import deleteIssue from './deleteIssueHandler';
-import createIssue from './issue-create-handler';
+import createIssueHandler from './issue-create-handler';
+import deleteIssueHandler from './issue-delete-handler';
 import getIssueByIssueId from './issue-get-by-id';
-import updateIssue from './updateIssueHandler';
+import { validateIssue, validateUpdateIssue } from './issue-middlewares';
+import updateIssueHandler from './issue-update-handler';
 
 export const issues = Router();
 
-issues.post('/', createIssue);
+issues.post('/', validateIssue, createIssueHandler);
 issues.get('/:issueId', getIssueByIssueId);
-issues.put('/:issueId', updateIssue);
-issues.delete('/:issueId', deleteIssue);
+issues.put('/:issueId', validateUpdateIssue, updateIssueHandler);
+issues.delete('/:issueId', deleteIssueHandler);
