@@ -14,7 +14,7 @@ import {
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Fragment, ReactNode, useState } from 'react';
+import { Fragment, ReactNode, useEffect, useState } from 'react';
 
 function twoWordName(name: string) {
   const nameArray: string[] = name.split(' ');
@@ -24,15 +24,6 @@ function twoWordName(name: string) {
     : nameArray[0][0];
 }
 
-const user = {
-  id: '1',
-  name: 'Al Mamun khan',
-  isAdmin: true,
-  profilePicture:
-    'https://res.cloudinary.com/dubm2ec8s/image/upload/v1679444754/Pregressp_1_ksqyg5.svg',
-  email: 'almamunkhan09@gmail.com',
-};
-
 const navigation = [
   { name: 'Dashboard', href: '/user', icon: HomeIcon, current: true },
   {
@@ -41,35 +32,55 @@ const navigation = [
     icon: FolderIcon,
     current: false,
   },
-  // { name: 'Calendar', href: '#', icon: CalendarIcon, current: false },
-  // { name: 'Documents', href: '#', icon: InboxIcon, current: false },
-  {
-    name: 'Reports',
-    href: '/user/reports',
-    icon: ChartBarIcon,
-    current: false,
-  },
-  { name: 'Issues', href: '/user/issues', icon: BugAntIcon, current: false },
-];
 
-if (user.isAdmin === true) {
-  navigation.push({
+  // {
+  //   name: 'Reports',
+  //   href: '/user/reports',
+  //   icon: ChartBarIcon,
+  //   current: false,
+  // },
+  { name: 'Issues', href: '/user/issues', icon: BugAntIcon, current: false },
+  {
     name: 'Team',
     href: '/user/team',
     icon: UsersIcon,
     current: false,
-  });
-}
+  },
+];
+const user1 = {
+  id: '1',
+  name: 'Al Mamun khan',
+  isAdmin: false,
+  profilePicture:
+    'https://res.cloudinary.com/dubm2ec8s/image/upload/v1679444754/Pregressp_1_ksqyg5.svg',
+  email: 'almamunkhan09@gmail.com',
+};
+
 const userNavigation = [
   { name: 'Your Profile', href: `/user/profile` },
-  { name: 'Sign out', href: `/user/logout/${user.id}` },
+  { name: 'Sign out', href: `/user/logout}` },
 ];
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
 }
+type User = {
+  id: string;
+  name: string;
+  isAdmin: boolean;
+  profilePicture: string;
+  email: string;
+};
 
 export default function CustomLayout({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    if (user1) {
+      return setUser(user1);
+    }
+  }, []);
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathName = usePathname();
   navigation.map((nav) => {
@@ -79,6 +90,8 @@ export default function CustomLayout({ children }: { children: ReactNode }) {
       return (nav.current = false);
     }
   });
+
+  if (!user) return <div> </div>;
 
   return (
     <>
@@ -152,29 +165,33 @@ export default function CustomLayout({ children }: { children: ReactNode }) {
                   </div>
                   <div className="mt-5 h-0 flex-1 overflow-y-auto">
                     <nav className="space-y-1 px-2">
-                      {navigation.map((item) => (
-                        <Link
-                          key={`key-${item.name}`}
-                          href={item.href}
-                          className={classNames(
-                            item.current
-                              ? 'bg-gray-900 text-white'
-                              : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                            'group flex items-center rounded-md px-2 py-2 text-base font-medium',
-                          )}
-                        >
-                          <item.icon
+                      {navigation.map((item) =>
+                        item.name === 'Team' && !user.isAdmin ? (
+                          ''
+                        ) : (
+                          <Link
+                            key={`key-${item.name}`}
+                            href={item.href}
                             className={classNames(
                               item.current
-                                ? 'text-gray-300'
-                                : 'text-gray-400 group-hover:text-gray-300',
-                              'mr-4 h-6 w-6 flex-shrink-0',
+                                ? 'bg-gray-900 text-white'
+                                : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                              'group flex items-center rounded-md px-2 py-2 text-base font-medium',
                             )}
-                            aria-hidden="true"
-                          />
-                          {item.name}
-                        </Link>
-                      ))}
+                          >
+                            <item.icon
+                              className={classNames(
+                                item.current
+                                  ? 'text-gray-300'
+                                  : 'text-gray-400 group-hover:text-gray-300',
+                                'mr-4 h-6 w-6 flex-shrink-0',
+                              )}
+                              aria-hidden="true"
+                            />
+                            {item.name}
+                          </Link>
+                        ),
+                      )}
                     </nav>
                   </div>
                 </Dialog.Panel>
@@ -199,29 +216,33 @@ export default function CustomLayout({ children }: { children: ReactNode }) {
             </div>
             <div className="flex flex-1 flex-col overflow-y-auto">
               <nav className="flex-1 space-y-1 px-2 py-4">
-                {navigation.map((item) => (
-                  <Link
-                    key={`key-${item.name}`}
-                    href={item.href}
-                    className={classNames(
-                      item.current
-                        ? 'bg-gray-900 text-white'
-                        : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                      'group flex items-center rounded-md px-2 py-2 text-sm font-medium',
-                    )}
-                  >
-                    <item.icon
+                {navigation.map((item) =>
+                  item.name === 'Team' && !user.isAdmin ? (
+                    ''
+                  ) : (
+                    <Link
+                      key={`key-${item.name}`}
+                      href={item.href}
                       className={classNames(
                         item.current
-                          ? 'text-gray-300'
-                          : 'text-gray-400 group-hover:text-gray-300',
-                        'mr-3 h-6 w-6 flex-shrink-0',
+                          ? 'bg-gray-900 text-white'
+                          : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                        'group flex items-center rounded-md px-2 py-2 text-sm font-medium',
                       )}
-                      aria-hidden="true"
-                    />
-                    {item.name}
-                  </Link>
-                ))}
+                    >
+                      <item.icon
+                        className={classNames(
+                          item.current
+                            ? 'text-gray-300'
+                            : 'text-gray-400 group-hover:text-gray-300',
+                          'mr-3 h-6 w-6 flex-shrink-0',
+                        )}
+                        aria-hidden="true"
+                      />
+                      {item.name}
+                    </Link>
+                  ),
+                )}
               </nav>
             </div>
           </div>

@@ -24,7 +24,6 @@ export default function TeamComponent() {
       })
       .catch((error) => {
         console.log(error);
-        // Handle the error in an appropriate way
       });
   }, []);
   if (!people1) return <div> Loading ....</div>;

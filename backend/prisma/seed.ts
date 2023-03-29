@@ -5,16 +5,15 @@ const prisma = new PrismaClient();
 const userData: Prisma.UserCreateInput[] = [
   {
     name: 'Al Mamun Khan',
-    email: 'almamunkhan09@gmail.com',
-    password: '12345678910',
+    email: 'almamun@gmail.com',
+    password: 'Ma12345678',
     isAdmin: true,
-    ownedTeam: {
-      create: [
-        {
-          name: 'Follow Prisma on Twitter',
-        },
-      ],
-    },
+  },
+  {
+    name: 'Khan Al Mamun',
+    email: 'khanAl@gmail.com',
+    password: 'Ka12345678',
+    isAdmin: true,
   },
 ];
 

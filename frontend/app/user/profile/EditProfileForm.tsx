@@ -1,13 +1,23 @@
 'use client';
+import { SubmitHandler, useForm } from 'react-hook-form';
 
-const handleSubmit: React.FormEventHandler<HTMLFormElement> = (event) =>
-  event.preventDefault();
+type Inputs = {
+  name: string;
+  profilePicture: File;
+};
 
 type Props = {
   setEditOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function Example({ setEditOpen }: Props) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Inputs>();
+  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+
   return (
     <div className="bg-white shadow sm:rounded-lg mt-10">
       <div className="px-4 py-5 sm:p-6">
@@ -17,16 +27,19 @@ export default function Example({ setEditOpen }: Props) {
         <div className="mt-2 max-w-xl text-sm text-gray-500">
           <p>Change your name and profile picture</p>
         </div>
-        <form className="mt-5  sm:items-center" onSubmit={handleSubmit}>
+        <form
+          className="mt-5  sm:items-center"
+          onSubmit={handleSubmit(onSubmit)}
+        >
           <div className="w-full sm:max-w-xs">
             <label htmlFor="name" className="sr-only">
               Name
             </label>
             <input
-              name="name"
               id="name"
               className="block w-full rounded-md border-0 py-2.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-md sm:leading-6 mb-3 "
               placeholder="Name"
+              {...register('name')}
             />
           </div>
           <div className="w-full sm:max-w-xs">
@@ -36,7 +49,9 @@ export default function Example({ setEditOpen }: Props) {
 
             <input
               type="file"
+              id="profile-picture"
               className="file-input file-input-bordered file-input-primary  file-input-md w-full max-w-xs"
+              {...register('profilePicture')}
             />
           </div>
           <div className="mt-3">
