@@ -21,7 +21,6 @@ interface Params {
 
 function page({ params }: Params) {
   const issueId = parseInt(params.issueId);
-  console.log(issueId);
   return <SingleIssue />;
 }
 

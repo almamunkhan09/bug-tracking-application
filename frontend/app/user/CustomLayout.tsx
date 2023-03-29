@@ -73,8 +73,11 @@ export default function CustomLayout({ children }: { children: ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathName = usePathname();
   navigation.map((nav) => {
-    if (nav.href === pathName) return (nav.current = true);
-    else return (nav.current = false);
+    if (nav.href.split('/')[2] === pathName.split('/')[2]) {
+      return (nav.current = true);
+    } else {
+      return (nav.current = false);
+    }
   });
 
   return (
