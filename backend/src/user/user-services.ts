@@ -43,6 +43,7 @@ export async function userDataById(id: string) {
       email: true,
       name: true,
       profilePicture: true,
+      isAdmin: true,
     },
   });
 }

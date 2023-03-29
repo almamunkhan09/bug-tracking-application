@@ -14,7 +14,7 @@ dotenv.config(); // Configure the dotenv for using enviornment variable
 const port = process.env.PORT || 3500;
 
 const app = express();
-app.use(cors());
+app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 app.use(express.json());
 app.use(cookieParser());
 

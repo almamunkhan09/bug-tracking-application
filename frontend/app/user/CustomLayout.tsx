@@ -12,9 +12,12 @@ import {
   UsersIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
+import axios from 'axios';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Fragment, ReactNode, useEffect, useState } from 'react';
+
+axios.defaults.withCredentials = true;
 
 function twoWordName(name: string) {
   const nameArray: string[] = name.split(' ');
@@ -75,11 +78,35 @@ type User = {
 export default function CustomLayout({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
 
+  const config = {
+    withCredentials: true,
+  };
+
   useEffect(() => {
-    if (user1) {
-      return setUser(user1);
-    }
+    axios
+      .get(`http://localhost:3600/api/users/singleuser`, config)
+      .then((response) => {
+        console.log('Success from custom layout !', response.data);
+        setUser(response.data);
+      })
+      .catch((error) => {
+        console.error('Error:', error.message);
+      });
+    // axios
+    //   .get(`http://localhost:3600/api/users/singleuser`, config)
+    //   .then((response) => {
+    //     setUser(response.data);
+    //   })
+    //   .catch((error) => {
+    //     console.error('Error:', error.message);
+    //   });
   }, []);
+
+  // useEffect(() => {
+  //   if (user1) {
+  //     return setUser(user1);
+  //   }
+  // }, []);
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathName = usePathname();
