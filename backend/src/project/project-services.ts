@@ -1,4 +1,4 @@
-import prisma from '../prisma';
+import prisma from '../../prisma';
 import { NewProject, UpdateProject } from './project-type';
 
 export async function createProject(inputData: NewProject) {

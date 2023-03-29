@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import prisma from '../prisma';
+import prisma from '../../prisma';
 
 export default async function deleteIssue(req: Request, res: Response) {
   const issueId = req.params.issueId;

@@ -75,6 +75,8 @@ model Issue {
   relatedProjectId   String @db.ObjectId
   comments    Comment[]    @relation("issueComments")
   commentsIds  String[] @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   // activity    Activity[]
 }
 

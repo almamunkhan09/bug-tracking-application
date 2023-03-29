@@ -1,4 +1,4 @@
-import prisma from '../prisma';
+import prisma from '../../prisma';
 import { NewIssue, UpdateIssueData } from './issue-types';
 
 /**

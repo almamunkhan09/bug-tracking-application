@@ -15,14 +15,14 @@ const schema = yup.object().shape({
   email: yup.string().email().required(),
   password: yup.string().required().min(8, 'Minimum 8 charcters'),
 });
-const sendLoginRequest = async (email, password) => {
+const sendLoginRequest = async (email: string, password: string) => {
   try {
     const res = await axios.post('http://localhost:3600/api/users/login', {
       email: email,
       password: password,
     });
     return res;
-  } catch (err) {
+  } catch (err: any) {
     if (err.response && err.response.status === 401) {
       // Handle the case where the email is already taken
       throw new Error('Email or Password does not match');
@@ -53,7 +53,7 @@ export default function Login() {
       } else {
         return alert('Error While login');
       }
-    } catch (err) {
+    } catch (err: any) {
       alert(err.message);
     }
   };

@@ -23,7 +23,11 @@ const schema = yup.object().shape({
     .string()
     .oneOf([yup.ref('password')], 'Passwords must match'),
 });
-const sendSignUpRequest = async (name, email, password) => {
+const sendSignUpRequest = async (
+  name: string,
+  email: string,
+  password: string,
+) => {
   try {
     const res = await axios.post('http://localhost:3600/api/users/', {
       name: name,
@@ -31,7 +35,7 @@ const sendSignUpRequest = async (name, email, password) => {
       password: password,
     });
     return res;
-  } catch (err) {
+  } catch (err: any) {
     if (err.response && err.response.status === 409) {
       // Handle the case where the email is already taken
       throw new Error('Email is already taken.');
@@ -69,7 +73,7 @@ export default function SignUp() {
       } else {
         return alert('Error');
       }
-    } catch (err) {
+    } catch (err: any) {
       alert(err.message);
     }
   };

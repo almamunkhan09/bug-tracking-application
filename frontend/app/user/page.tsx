@@ -1,8 +1,14 @@
 import StatCard from '@/components/StatCard';
+import UserPage from '@/components/UserPage';
 import React from 'react';
 
 function page() {
-  return <StatCard />;
+  return (
+    <>
+      <UserPage />
+      <StatCard />
+    </>
+  );
 }
 
 export default page;

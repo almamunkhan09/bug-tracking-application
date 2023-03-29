@@ -27,7 +27,6 @@
     "nodemon": "^2.0.21",
     "pino": "^8.11.0",
     "pino-pretty": "^9.4.0",
-    "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
     "tsc-watch": "^6.0.0",
     "typedoc": "^0.23.28",

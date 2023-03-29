@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv';
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 // import { omit } from 'lodash';
-import prisma from '../prisma';
+import prisma from '../../prisma';
 import log from '../utils/logger';
 
 dotenv.config(); // Configure the dotenv for using enviornment variable

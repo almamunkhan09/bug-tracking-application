@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import prisma from '../prisma';
+import prisma from '../../prisma';
 
 export default async function deleteComment(req: Request, res: Response) {
   const commentId = req.params.commentId;
