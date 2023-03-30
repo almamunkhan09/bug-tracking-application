@@ -19,7 +19,7 @@ export default async function deleteUser(req: Request, res: Response) {
 
     const response = {
       ...result,
-      message: 'User Updated Successfully',
+      message: 'Deleted Successfully',
     };
 
     return res.status(200).json(response);

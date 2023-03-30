@@ -39,7 +39,7 @@ function twoWordName(name: string) {
   const nameArray: string[] = name.split(' ');
 
   return nameArray.length > 1
-    ? `${nameArray[0][0]}${nameArray[1][0]}`
+    ? `${nameArray[0][0]}${nameArray[nameArray.length - 1][0]}`
     : nameArray[0][0];
 }
 

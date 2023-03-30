@@ -1,73 +1,36 @@
 'use client';
-import { EnvelopeIcon, PhoneIcon, UserIcon } from '@heroicons/react/20/solid';
+import { EnvelopeIcon, UserIcon } from '@heroicons/react/20/solid';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 
-const people = [
-  {
-    id: '1',
-    name: 'Al Mamun KHan',
-    title: 'Web Developer',
-    role: 'Admin',
-    email: 'janecooper@example.com',
-    telephone: '+1-202-555-0170',
-    profilePicture:
-      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60',
-  },
-  {
-    id: '2',
-    name: 'Majharul Islam',
-    title: 'Web Designer',
-    role: 'Admin',
-    email: 'janecooper@example.com',
-    // telephone: '+1-202-555-0170',
-    // profilePicture:
-    //   'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60',
-  },
-  {
-    id: '3',
-    name: 'Majharul Islam',
-    title: 'Web Designer',
-    role: 'Admin',
-    email: 'janecooper@example.com',
-    // telephone: '+1-202-555-0170',
-    // profilePicture:
-    //   'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60',
-  },
-  {
-    id: '4',
-    name: 'Majharul Islam',
-    title: 'Web Designer',
-    role: 'Admin',
-    email: 'janecooper@example.com',
-    // telephone: '+1-202-555-0170',
-    // profilePicture:
-    //   'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60',
-  },
-  {
-    id: '5',
-    name: 'Majharul Islam',
-    title: 'Web Designer',
-    role: 'Admin',
-    email: 'janecooper@example.com',
-    telephone: '+1-202-555-0170',
-    profilePicture:
-      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60',
-  },
-  {
-    id: '6',
-    name: 'Majharul Islam',
-    title: 'Web Designer',
-    role: 'Admin',
-    email: 'janecooper@example.com',
-    telephone: '+1-202-555-0170',
-    profilePicture:
-      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60',
-  },
-];
+type PeopleType = {
+  id: string;
+  name: string;
+  isAdmin: boolean;
+  email: string;
+  profilePicture: string;
+  createdAt: Date;
+}[];
 
 export default function TeamComponent() {
+  const [people1, setPeople1] = useState<PeopleType | null>(null);
+  useEffect(() => {
+    axios
+      .get('http://localhost:3600/api/users/')
+      .then((response) => {
+        setPeople1(response.data);
+        console.log(response.data);
+        // Do something with the response data
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+  if (!people1) return <div> Loading ....</div>;
+
   return (
     <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-      {people.map((person) => (
+      {people1.map((person) => (
         <li
           key={`personId-${person.id}`}
           className="col-span-1 flex flex-col divide-y divide-gray-200 rounded-lg bg-white text-center shadow"
@@ -89,14 +52,10 @@ export default function TeamComponent() {
               {person.name}
             </h3>
             <dl className="mt-1 flex flex-grow flex-col justify-between">
-              <dt className="sr-only">Title</dt>
-              <dd className="text-sm text-gray-500">{person.title}</dd>
-              <dt className="sr-only">Role</dt>
-              {/* <dd className="mt-3">
-                <span className="rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-800">
-                  {person.role}
-                </span>
-              </dd> */}
+              {/* <dt className="sr-only">Title</dt> */}
+              <dd className="text-sm text-gray-500">
+                {person.isAdmin ? 'Admin' : 'Developer'}
+              </dd>
             </dl>
           </div>
           <div>
@@ -112,20 +71,6 @@ export default function TeamComponent() {
                   />
                   Email
                 </a>
-              </div>
-              <div className="-ml-px flex w-0 flex-1">
-                {!!person.telephone && (
-                  <a
-                    href={`tel:${person.telephone}`}
-                    className="relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-gray-900"
-                  >
-                    <PhoneIcon
-                      className="h-5 w-5 text-gray-400"
-                      aria-hidden="true"
-                    />
-                    Call
-                  </a>
-                )}
               </div>
             </div>
           </div>

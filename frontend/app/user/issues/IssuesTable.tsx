@@ -28,9 +28,9 @@ const issues = [
   },
 ];
 
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ');
-}
+// function classNames(...classes: string[]) {
+//   return classes.filter(Boolean).join(' ');
+// }
 
 export default function IssuesTable() {
   return (
@@ -40,15 +40,9 @@ export default function IssuesTable() {
           <h1 className="text-base font-semibold leading-6 text-gray-900">
             Issues
           </h1>
-          {/* <p className="mt-2 text-sm text-gray-700">
-            A list of all the users in your account including their name, title,
-            email and role.
-          </p> */}
         </div>
         <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-          {/* The button to open modal */}
           <IssueModal />
-          {/* <NewProjectForm open={open} setOpen={setOpen} /> */}
         </div>
       </div>
       <div className="mt-8 flow-root">
@@ -109,7 +103,7 @@ export default function IssuesTable() {
                 {issues.map((issue) => (
                   <tr key={`key-${issue.id}`}>
                     <td className=" py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0 ">
-                      <Link href={`/projects/${issue.id}`}>{issue.id}</Link>
+                      <Link href={`/user/issues/${issue.id}`}>{issue.id}</Link>
                     </td>
                     <td className=" py-4 px-3 text-sm text-gray-500 ">
                       {issue.title}
@@ -130,12 +124,12 @@ export default function IssuesTable() {
                       {issue.status}
                     </td>
                     <td className="relative  py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                      <a
-                        href={`/projects/${issue.id}`}
+                      <Link
+                        href={`/user/issues/${issue.id}`}
                         className="text-indigo-600 hover:text-indigo-900"
                       >
-                        Edit<span className="sr-only">, {issue.title}</span>
-                      </a>
+                        Details
+                      </Link>
                     </td>
                   </tr>
                 ))}

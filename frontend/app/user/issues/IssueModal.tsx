@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
-import MemberSelect from '../projects/MemberSelect';
+
+// import MemberSelect from '../projects/MemberSelect';
 
 function IssueModal() {
   return (
@@ -23,7 +24,7 @@ function IssueModal() {
           <h3 className="text-lg font-bold">Report a new Issue</h3>
           <div>
             <label
-              htmlFor="project-name"
+              htmlFor="title"
               className="block text-sm font-medium leading-6 text-gray-900"
             >
               Title
@@ -31,7 +32,7 @@ function IssueModal() {
             <div className="mt-2">
               <input
                 name="project-name"
-                id="project-name"
+                id="title"
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
@@ -57,9 +58,7 @@ function IssueModal() {
             <h3 className="text-sm font-medium leading-6 text-gray-900">
               Team Members
             </h3>
-            <div className="mt-2">
-              <MemberSelect />
-            </div>
+            <div className="mt-2">{/* <MemberSelect /> */}</div>
             <div className="flex flex-shrink-0 justify-end py-4">
               <button className="ml-4 inline-flex justify-center rounded-md bg-indigo-600 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                 Save

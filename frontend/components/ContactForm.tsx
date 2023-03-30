@@ -36,6 +36,7 @@ export default function ContactForm() {
       setMessage('');
       router.push('/');
     } catch (error) {
+      console.log(error);
       alert('Error sending message');
     }
   };
