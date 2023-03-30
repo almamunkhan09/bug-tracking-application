@@ -44,16 +44,20 @@ export default async function userLogin(req: Request, res: Response) {
     const accessTocken = jwt.sign(
       { id: user.id, isAdmin: user.isAdmin },
       secret,
-      { expiresIn: '30s' },
+      { expiresIn: '1hr' },
     );
     const loginData = {
       id: user.id,
       isAdmin: user.isAdmin,
       name: user.name,
     };
+    console.log('Generate Token\n', accessTocken);
+    if (req.cookies[loginData.id]) {
+      req.cookies[loginData.id] = ' ';
+    }
     res.cookie(String(user.id), accessTocken, {
       path: '/',
-      expires: new Date(Date.now() + 1000 * 30),
+      expires: new Date(Date.now() + 1000 * 60 * 60),
       httpOnly: true,
       sameSite: 'lax',
     });

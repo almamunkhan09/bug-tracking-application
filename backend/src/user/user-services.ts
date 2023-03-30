@@ -44,6 +44,8 @@ export async function userDataById(id: string) {
       name: true,
       profilePicture: true,
       isAdmin: true,
+      createdAt: true,
+      updatedAt: true,
     },
   });
 }

@@ -56,6 +56,10 @@ export default function Login() {
           setIsLoading(false);
           return router.push('/user');
         }, 2000);
+
+        setTimeout(() => {
+          return router.push('/user');
+        }, 4000);
       } else {
         return alert('Error While login');
       }

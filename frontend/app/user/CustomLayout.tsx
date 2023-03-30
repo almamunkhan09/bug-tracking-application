@@ -12,7 +12,7 @@ import {
   UsersIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Fragment, ReactNode, useEffect, useState } from 'react';
@@ -50,14 +50,14 @@ const navigation = [
     current: false,
   },
 ];
-const user1 = {
-  id: '1',
-  name: 'Al Mamun khan',
-  isAdmin: false,
-  profilePicture:
-    'https://res.cloudinary.com/dubm2ec8s/image/upload/v1679444754/Pregressp_1_ksqyg5.svg',
-  email: 'almamunkhan09@gmail.com',
-};
+// const user1 = {
+//   id: '1',
+//   name: 'Al Mamun khan',
+//   isAdmin: false,
+//   profilePicture:
+//     'https://res.cloudinary.com/dubm2ec8s/image/upload/v1679444754/Pregressp_1_ksqyg5.svg',
+//   email: 'almamunkhan09@gmail.com',
+// };
 
 const userNavigation = [
   { name: 'Your Profile', href: `/user/profile` },
@@ -75,6 +75,7 @@ type User = {
   email: string;
 };
 
+let firstRender = true;
 export default function CustomLayout({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
 
@@ -83,31 +84,34 @@ export default function CustomLayout({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:3600/api/users/singleuser`, config)
-      .then((response) => {
-        // console.log('Success from custom layout !', response.data);
-        setUser(response.data);
-        localStorage.setItem('user', JSON.stringify(response.data));
-      })
-      .catch((error) => {
-        console.error('Error:', error.message);
-      });
-    // axios
-    //   .get(`http://localhost:3600/api/users/singleuser`, config)
-    //   .then((response) => {
-    //     setUser(response.data);
-    //   })
-    //   .catch((error) => {
-    //     console.error('Error:', error.message);
-    //   });
-  }, []);
+    if (firstRender) {
+      axios
+        .get(`http://localhost:3600/api/users/singleuser`, config)
+        .then((response) => {
+          // console.log('Success from custom layout !', response.data);
+          setUser(response.data);
+          firstRender = false;
+          console.log(firstRender);
+          localStorage.setItem('user', JSON.stringify(response.data));
+        })
+        .catch((error) => {
+          console.error('Error:', error.message);
+        });
+    }
 
-  // useEffect(() => {
-  //   if (user1) {
-  //     return setUser(user1);
-  //   }
-  // }, []);
+    const interval = setInterval(() => {
+      axios
+        .get(`http://localhost:3600/api/users/refreshtoken`, config)
+        .then((response) => {
+          // console.log('Success from custom layout !', response.data);
+          setUser(response.data);
+        })
+        .catch((error) => {
+          console.error('Error:', error.message);
+        });
+    }, 1000 * 60 * 50);
+    return () => clearInterval(interval);
+  }, []);
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathName = usePathname();
