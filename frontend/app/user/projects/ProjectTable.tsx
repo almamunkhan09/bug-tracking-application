@@ -34,6 +34,10 @@ const projects = [
 ];
 
 function nameFromArray(maintainers: { id: string; name: string }[]) {
+  const stringifiedUser = localStorage.getItem('user');
+  const user = stringifiedUser && JSON.parse(stringifiedUser);
+
+  console.log(user);
   const onlyNames = maintainers.map((maintainer) => maintainer.name);
   return onlyNames.join(',');
 }

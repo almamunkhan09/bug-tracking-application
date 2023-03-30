@@ -86,8 +86,9 @@ export default function CustomLayout({ children }: { children: ReactNode }) {
     axios
       .get(`http://localhost:3600/api/users/singleuser`, config)
       .then((response) => {
-        console.log('Success from custom layout !', response.data);
+        // console.log('Success from custom layout !', response.data);
         setUser(response.data);
+        localStorage.setItem('user', JSON.stringify(response.data));
       })
       .catch((error) => {
         console.error('Error:', error.message);

@@ -2,16 +2,81 @@
 import { Dialog, Transition } from '@headlessui/react';
 // import { PlusIcon } from '@heroicons/react/20/solid';
 import { XMarkIcon } from '@heroicons/react/24/outline';
+import { yupResolver } from '@hookform/resolvers/yup';
 // import Link from 'next/link';
-import { Fragment } from 'react';
-import MemberSelect from './MemberSelect';
+import React, { Fragment, useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import Select from 'react-select';
+import * as yup from 'yup';
 
 interface AppProps {
   open: boolean;
   setOpen: (value: boolean) => void;
 }
 
+const people = [
+  { value: '1', label: 'Wade Cooper' },
+  { value: '2', label: 'Arlene Mccoy' },
+  { value: '3', label: 'Devon Webb' },
+  { value: '4', label: 'Tom Cook' },
+  { value: '5', label: 'Tanya Fox' },
+];
+
+type Option = {
+  label: string;
+  value: string;
+};
+
+type Inputs = {
+  title: string;
+  description: string;
+  // maintainers: string[];
+  deadline: Date;
+};
+
+const schema = yup.object().shape({
+  title: yup.string().required(),
+  description: yup.string().required(),
+  // maintainer: yup.array().of(yup.string()).required(),
+  deadline: yup.date().required(),
+});
+
 export default function NewProjectForm({ open, setOpen }: AppProps) {
+  const stringifiedUser = localStorage.getItem('user');
+  const user = stringifiedUser && JSON.parse(stringifiedUser);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<Inputs>({
+    resolver: yupResolver(schema),
+  });
+
+  const [selectedOption, setSelectedOption] = useState<Option[] | null>(null);
+
+  const handleSelectChange = (selectedOption: Option[]) => {
+    setSelectedOption(selectedOption);
+  };
+
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    console.log(data, selectedOption);
+    const requestData = {
+      title: data.title,
+      description: data.description,
+      createdById: user.id,
+      maintainersId:
+        selectedOption &&
+        selectedOption.map(
+          (item: { value: string; label: string }) => item.value,
+        ),
+      deadline: new Date(data.deadline).toLocaleDateString('en-GB'),
+    };
+
+    console.log(requestData);
+    reset();
+  };
+
   // const [open, setOpen] = useState(true);
 
   return (
@@ -32,7 +97,10 @@ export default function NewProjectForm({ open, setOpen }: AppProps) {
                 leaveTo="translate-x-full"
               >
                 <Dialog.Panel className="pointer-events-auto w-screen max-w-md">
-                  <form className="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl">
+                  <form
+                    className="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl"
+                    onSubmit={handleSubmit(onSubmit)}
+                  >
                     <div className="h-0 flex-1 overflow-y-auto">
                       <div className="bg-indigo-700 py-6 px-4 sm:px-6">
                         <div className="flex items-center justify-between">
@@ -72,10 +140,11 @@ export default function NewProjectForm({ open, setOpen }: AppProps) {
                               </label>
                               <div className="mt-2">
                                 <input
-                                  name="project-name"
                                   id="project-name"
+                                  {...register('title')}
                                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                 />
+                                {errors.title?.message}
                               </div>
                             </div>
                             <div>
@@ -88,11 +157,12 @@ export default function NewProjectForm({ open, setOpen }: AppProps) {
                               <div className="mt-2">
                                 <textarea
                                   id="description"
-                                  name="description"
+                                  {...register('description')}
                                   rows={4}
                                   className="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6"
                                   defaultValue=""
                                 />
+                                {errors.description?.message}
                               </div>
                             </div>
                             <div>
@@ -100,7 +170,16 @@ export default function NewProjectForm({ open, setOpen }: AppProps) {
                                 Team Members
                               </h3>
                               <div className="mt-2">
-                                <MemberSelect />
+                                <Select
+                                  // defaultValue={[people[2], people[3]]}
+                                  isMulti
+                                  options={people}
+                                  // @ts-ignore
+                                  onChange={handleSelectChange}
+                                  required
+                                  className="basic-multi-select block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 "
+                                  classNamePrefix="select"
+                                />
                               </div>
                             </div>
                             <div>
@@ -110,6 +189,7 @@ export default function NewProjectForm({ open, setOpen }: AppProps) {
                               <div className="mt-2">
                                 <input
                                   type="date"
+                                  {...register('deadline')}
                                   min={new Date().toISOString().split('T')[0]}
                                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                 />

@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
-import MemberSelect from '../projects/MemberSelect';
+
+// import MemberSelect from '../projects/MemberSelect';
 
 function IssueModal() {
   return (
@@ -57,9 +58,7 @@ function IssueModal() {
             <h3 className="text-sm font-medium leading-6 text-gray-900">
               Team Members
             </h3>
-            <div className="mt-2">
-              <MemberSelect />
-            </div>
+            <div className="mt-2">{/* <MemberSelect /> */}</div>
             <div className="flex flex-shrink-0 justify-end py-4">
               <button className="ml-4 inline-flex justify-center rounded-md bg-indigo-600 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                 Save
