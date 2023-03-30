@@ -28,7 +28,7 @@ function twoWordName(name: string) {
 }
 
 const navigation = [
-  { name: 'Dashboard', href: '/user', icon: HomeIcon, current: true },
+  { name: 'Home', href: '/user', icon: HomeIcon, current: true },
   {
     name: 'Projects',
     href: '/user/projects',

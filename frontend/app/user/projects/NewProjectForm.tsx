@@ -3,8 +3,9 @@ import { Dialog, Transition } from '@headlessui/react';
 // import { PlusIcon } from '@heroicons/react/20/solid';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { yupResolver } from '@hookform/resolvers/yup';
+import axios from 'axios';
 // import Link from 'next/link';
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import Select from 'react-select';
 import * as yup from 'yup';
@@ -14,13 +15,22 @@ interface AppProps {
   setOpen: (value: boolean) => void;
 }
 
-const people = [
-  { value: '1', label: 'Wade Cooper' },
-  { value: '2', label: 'Arlene Mccoy' },
-  { value: '3', label: 'Devon Webb' },
-  { value: '4', label: 'Tom Cook' },
-  { value: '5', label: 'Tanya Fox' },
-];
+// const people = [
+//   { value: '1', label: 'Wade Cooper' },
+//   { value: '2', label: 'Arlene Mccoy' },
+//   { value: '3', label: 'Devon Webb' },
+//   { value: '4', label: 'Tom Cook' },
+//   { value: '5', label: 'Tanya Fox' },
+// ];
+
+type PeopleType = {
+  id: string;
+  name: string;
+  isAdmin: boolean;
+  email: string;
+  profilePicture: string;
+  createdAt: Date;
+}[];
 
 type Option = {
   label: string;
@@ -42,6 +52,28 @@ const schema = yup.object().shape({
 });
 
 export default function NewProjectForm({ open, setOpen }: AppProps) {
+  const [people, setPeople] = useState<
+    { value: string; label: string }[] | null
+  >(null);
+  useEffect(() => {
+    axios
+      .get('http://localhost:3600/api/users/')
+      .then((response) => {
+        const teamMembers: PeopleType = response.data;
+        const team: { value: string; label: string }[] = teamMembers.map(
+          (member) => ({
+            value: member.id,
+            label: member.name,
+          }),
+        );
+        console.log('team', team);
+        setPeople(team);
+        console.log('ProjectForm', response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
   const stringifiedUser = localStorage.getItem('user');
   const user = stringifiedUser && JSON.parse(stringifiedUser);
   const {
@@ -123,8 +155,8 @@ export default function NewProjectForm({ open, setOpen }: AppProps) {
                         </div>
                         <div className="mt-1">
                           <p className="text-sm text-indigo-300">
-                            Get started by filling in the information below to
-                            create your new project.
+                            Fill the information to create a new project in your
+                            team
                           </p>
                         </div>
                       </div>
@@ -136,7 +168,7 @@ export default function NewProjectForm({ open, setOpen }: AppProps) {
                                 htmlFor="project-name"
                                 className="block text-sm font-medium leading-6 text-gray-900"
                               >
-                                Project name
+                                Project Title
                               </label>
                               <div className="mt-2">
                                 <input
@@ -166,21 +198,27 @@ export default function NewProjectForm({ open, setOpen }: AppProps) {
                               </div>
                             </div>
                             <div>
-                              <h3 className="text-sm font-medium leading-6 text-gray-900">
-                                Team Members
-                              </h3>
-                              <div className="mt-2">
-                                <Select
-                                  // defaultValue={[people[2], people[3]]}
-                                  isMulti
-                                  options={people}
-                                  // @ts-ignore
-                                  onChange={handleSelectChange}
-                                  required
-                                  className="basic-multi-select block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 "
-                                  classNamePrefix="select"
-                                />
-                              </div>
+                              {!people ? (
+                                ''
+                              ) : (
+                                <>
+                                  <h3 className="text-sm font-medium leading-6 text-gray-900">
+                                    Team Members
+                                  </h3>
+                                  <div className="mt-2">
+                                    <Select
+                                      // defaultValue={[people[2], people[3]]}
+                                      isMulti
+                                      options={people}
+                                      // @ts-ignore
+                                      onChange={handleSelectChange}
+                                      required
+                                      className="basic-multi-select block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 "
+                                      classNamePrefix="select"
+                                    />
+                                  </div>
+                                </>
+                              )}
                             </div>
                             <div>
                               <h3 className="text-sm font-medium leading-6 text-gray-900">
@@ -199,18 +237,22 @@ export default function NewProjectForm({ open, setOpen }: AppProps) {
                         </div>
                       </div>
                     </div>
-                    <div className="flex flex-shrink-0 justify-end px-4 py-4">
-                      <button
-                        type="button"
-                        className="rounded-md bg-white py-2 px-3 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                        onClick={() => setOpen(false)}
-                      >
-                        Cancel
-                      </button>
-                      <button className="ml-4 inline-flex justify-center rounded-md bg-indigo-600 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                        Save
-                      </button>
-                    </div>
+                    {!people ? (
+                      'Unable to fetch members information'
+                    ) : (
+                      <div className="flex flex-shrink-0 justify-end px-4 py-4">
+                        <button
+                          type="button"
+                          className="rounded-md bg-white py-2 px-3 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                          onClick={() => setOpen(false)}
+                        >
+                          Cancel
+                        </button>
+                        <button className="ml-4 inline-flex justify-center rounded-md bg-indigo-600 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                          Save
+                        </button>
+                      </div>
+                    )}
                   </form>
                 </Dialog.Panel>
               </Transition.Child>

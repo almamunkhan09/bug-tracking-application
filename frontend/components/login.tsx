@@ -2,7 +2,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import React from 'react';
+import React, { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
@@ -34,6 +34,7 @@ const sendLoginRequest = async (email: string, password: string) => {
 };
 
 export default function Login() {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
   const {
     register,
@@ -45,11 +46,16 @@ export default function Login() {
   });
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    setIsLoading(true);
     try {
       const res = await sendLoginRequest(data.email, data.password);
       if (res.status === 200) {
         reset();
-        return router.push('/user');
+
+        setTimeout(() => {
+          setIsLoading(false);
+          return router.push('/user');
+        }, 2000);
       } else {
         return alert('Error While login');
       }
@@ -115,6 +121,8 @@ export default function Login() {
               <button className="flex w-full justify-center rounded-md bg-indigo-600 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                 Sign in
               </button>
+
+              {isLoading && <progress className="progress w-full"> </progress>}
             </div>
           </form>
         </div>
