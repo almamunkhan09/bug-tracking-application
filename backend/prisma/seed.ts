@@ -47,6 +47,7 @@ async function main() {
         email: u.email,
         password: await generateHash(u.password),
         isAdmin: u.isAdmin,
+        profilePicture: u.profilePicture,
       },
     });
     console.log(`Created user with id: ${user.id}`);

@@ -44,7 +44,7 @@ export default async function userLogin(req: Request, res: Response) {
     const accessTocken = jwt.sign(
       { id: user.id, isAdmin: user.isAdmin },
       secret,
-      { expiresIn: '1hr' },
+      { expiresIn: '30m' },
     );
     const loginData = {
       id: user.id,
@@ -57,7 +57,7 @@ export default async function userLogin(req: Request, res: Response) {
     }
     res.cookie(String(user.id), accessTocken, {
       path: '/',
-      expires: new Date(Date.now() + 1000 * 60 * 60),
+      expires: new Date(Date.now() + 1000 * 60 * 30),
       httpOnly: true,
       sameSite: 'lax',
     });

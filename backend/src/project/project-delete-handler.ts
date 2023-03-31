@@ -21,7 +21,7 @@ export default async function deleteProjectHandler(
       ...result,
       message: 'Deleted Project',
     };
-    return res.status(204).json(response);
+    return res.status(204).json(response); // The status code 204 make a response 1 to the browser
   } catch (error: any) {
     res.status(400).json({ error: error.message });
   }

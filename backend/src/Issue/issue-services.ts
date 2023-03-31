@@ -21,8 +21,17 @@ export async function createIssue({
   priority,
   reporterId,
   assigneeIds,
-  relatedProjectIds,
+  relatedProjectId,
 }: NewIssue) {
+  console.log({
+    title,
+    description,
+    status,
+    priority,
+    reporterId,
+    assigneeIds,
+    relatedProjectId,
+  });
   return await prisma.issue.create({
     data: {
       title,
@@ -31,7 +40,7 @@ export async function createIssue({
       priority: priority || 'low',
       reporter: { connect: { id: reporterId } },
       assignees: { connect: assigneeIds.map((id) => ({ id })) },
-      relatedProject: { connect: { id: relatedProjectIds } },
+      relatedProject: { connect: { id: relatedProjectId } },
     },
     include: {
       reporter: {
@@ -118,8 +127,6 @@ export async function issueByIssueId(issueId: string) {
         select: {
           name: true,
           id: true,
-          profilePicture: true,
-          email: true,
         },
       },
       assignees: {
@@ -127,24 +134,29 @@ export async function issueByIssueId(issueId: string) {
           name: true,
           id: true,
           profilePicture: true,
-          email: true,
         },
       },
       relatedProject: {
         select: {
+          id: true,
           title: true,
-          description: true,
-          maintainers: {
+        },
+      },
+      comments: {
+        select: {
+          id: true,
+          content: true,
+          createdAt: true,
+          updatedAt: true,
+          commentedBy: {
             select: {
               name: true,
-              email: true,
               id: true,
               profilePicture: true,
             },
           },
         },
       },
-      comments: true,
     },
   });
 }

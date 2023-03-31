@@ -6,8 +6,8 @@ export const issueSchema = joi.object({
   status: joi.string(),
   priority: joi.string(),
   reporterId: joi.string().required(),
-  assigneeIds: joi.array().items(joi.string()).required(),
-  relatedProjectIds: joi.string().required(),
+  assigneeIds: joi.array().items(joi.string()),
+  relatedProjectId: joi.string().required(),
 });
 
 export const updateIssueSchema = joi.object({

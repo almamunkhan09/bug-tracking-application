@@ -39,12 +39,12 @@ export default function refreshToken(
       req.cookies[`${user.id}`] = '';
 
       const token = jwt.sign({ id: user.id }, secret, {
-        expiresIn: '1h',
+        expiresIn: '30m',
       });
       console.log('Regenerated Token\n', token);
       res.cookie(String(user.id), token, {
         path: '/',
-        expires: new Date(Date.now() + 1000 * 60 * 60), // 1 hr
+        expires: new Date(Date.now() + 1000 * 60 * 30), // 30 m
         httpOnly: true,
         sameSite: 'lax',
       });

@@ -5,7 +5,7 @@ export interface NewIssue {
   priority?: string;
   reporterId: string;
   assigneeIds: string[];
-  relatedProjectIds: string;
+  relatedProjectId: string;
 }
 
 export interface UpdateIssueData {

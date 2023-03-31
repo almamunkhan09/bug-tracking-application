@@ -61,7 +61,7 @@ const navigation = [
 
 const userNavigation = [
   { name: 'Your Profile', href: `/user/profile` },
-  { name: 'Sign out', href: `/user/logout}` },
+  { name: 'Sign out', href: `/user/logout` },
 ];
 
 function classNames(...classes: string[]) {
@@ -78,26 +78,42 @@ type User = {
 let firstRender = true;
 export default function CustomLayout({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const config = {
     withCredentials: true,
   };
 
   useEffect(() => {
-    if (firstRender) {
-      axios
-        .get(`http://localhost:3600/api/users/singleuser`, config)
-        .then((response) => {
-          // console.log('Success from custom layout !', response.data);
-          setUser(response.data);
-          firstRender = false;
-          console.log(firstRender);
-          localStorage.setItem('user', JSON.stringify(response.data));
-        })
-        .catch((error) => {
-          console.error('Error:', error.message);
-        });
-    }
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get(
+          'http://localhost:3600/api/users/singleuser',
+          config,
+        );
+        setUser(response.data);
+        setLoading(false);
+        localStorage.setItem('user', JSON.stringify(response.data));
+      } catch (error: any) {
+        console.error('Error:', error.message);
+      }
+    };
+
+    fetchUser().catch((err) => console.log(err));
+    // if (firstRender) {
+    //   axios
+    //     .get(`http://localhost:3600/api/users/singleuser`, config)
+    //     .then((response) => {
+    //       // console.log('Success from custom layout !', response.data);
+    //       setUser(response.data);
+    //       firstRender = false;
+    //       console.log(firstRender);
+    //       localStorage.setItem('user', JSON.stringify(response.data));
+    //     })
+    //     .catch((error) => {
+    //       console.error('Error:', error.message);
+    //     });
+    // }
 
     const interval = setInterval(() => {
       axios
@@ -123,7 +139,10 @@ export default function CustomLayout({ children }: { children: ReactNode }) {
     }
   });
 
-  if (!user) return <div> </div>;
+  // if (!user) return <div> </div>;
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>

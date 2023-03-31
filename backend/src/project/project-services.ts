@@ -58,7 +58,20 @@ export async function getProjectById(id: string) {
           email: true,
         },
       },
-      issues: true,
+      issues: {
+        select: {
+          id: true,
+          title: true,
+          status: true,
+          priority: true,
+          reporter: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      },
     },
   });
 }

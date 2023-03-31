@@ -18,7 +18,7 @@ model User {
   isAdmin  Boolean  @default(false)
   // ownedTeam Team[] @relation("ownedTeam")
   // teams           Team[]   @relation(fields: [teamIds], references: [id])
-  teamIds         String[] @db.ObjectId
+  // teamIds         String[] @db.ObjectId
   ownedProjects Project[] @relation("ownedProjects")
   createdAt DateTime @default(now())
   projects           Project[]   @relation("maintainers",fields: [projectIds], references: [id])
@@ -27,9 +27,6 @@ model User {
   issues             Issue[] @relation("assignedIssues",fields: [issuesIds], references: [id])
   issuesIds         String[] @db.ObjectId
   Comments     Comment[] @relation("commentedBy")
-
-
-
   updatedAt DateTime @updatedAt
 
 }
@@ -73,11 +70,10 @@ model Issue {
   assigneeIds  String[] @db.ObjectId
   relatedProject    Project   @relation("relatedProject",fields: [relatedProjectId], references: [id])
   relatedProjectId   String @db.ObjectId
-  comments    Comment[]    @relation("issueComments")
+  comments   Comment[]    @relation("issueComments")
   commentsIds  String[] @db.ObjectId
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  // activity    Activity[]
 }
 
 model Comment {
@@ -92,19 +88,3 @@ model Comment {
   updatedAt DateTime @updatedAt
 
 }
-
-
-// model TeamMember {
-//   id          String   @id @default(auto()) @map("_id") @db.ObjectId
-//   user        User     @relation(fields: [userId], references: [id])
-//   userId      String   @db.ObjectId
-//   project     Project? @relation(fields: [projectId], references: [id])
-//   projectId   String?  @db.ObjectId
-//   team        Team     @relation(fields: [teamId], references: [id])
-//   teamId      String   @db.ObjectId
-//   role        String?
-//   createdAt   DateTime @default(now())
-//   updatedAt   DateTime @updatedAt
-
-//   @@unique([userId, projectId, teamId])
-// }

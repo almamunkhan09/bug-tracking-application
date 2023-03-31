@@ -10,10 +10,11 @@ interface NewIssue {
   priority?: string;
   reporterId: string;
   assigneeIds: string[];
-  relatedProjectIds: string;
+  relatedProjectId: string;
 }
 
 export default async function createIssueHandler(req: Request, res: Response) {
+  console.log(req.body);
   const {
     title,
     description,
@@ -21,7 +22,7 @@ export default async function createIssueHandler(req: Request, res: Response) {
     priority,
     reporterId,
     assigneeIds,
-    relatedProjectIds,
+    relatedProjectId,
   }: NewIssue = req.body;
 
   try {
@@ -32,7 +33,7 @@ export default async function createIssueHandler(req: Request, res: Response) {
       priority,
       reporterId,
       assigneeIds,
-      relatedProjectIds,
+      relatedProjectId,
     });
 
     const response = {

@@ -2,7 +2,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
@@ -50,14 +50,9 @@ export default function Login() {
     try {
       const res = await sendLoginRequest(data.email, data.password);
       if (res.status === 200) {
-        reset();
-
         setTimeout(() => {
           setIsLoading(false);
-          return router.push('/user');
-        }, 2000);
-
-        setTimeout(() => {
+          reset();
           return router.push('/user');
         }, 4000);
       } else {
@@ -67,14 +62,13 @@ export default function Login() {
       alert(err.message);
     }
   };
+  useEffect(() => {
+    router.refresh();
+  }, []);
   return (
     <div className="flex  flex-col justify-center py-12 sm:px-6 lg:px-8  bg-gray-900 h-screen">
       <div className="sm:mx-auto sm:w-full sm:max-w-md mt-1 ">
-        <img
-          className="mx-auto h-20 w-auto"
-          src="logo.svg"
-          alt="Your Company"
-        />
+        <img className="mx-auto h-20 w-auto" src="logo.svg" alt="Progesso" />
         <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-white">
           Sign in to your account
         </h2>

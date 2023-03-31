@@ -1,10 +1,10 @@
 import { Metadata } from 'next';
 import React from 'react';
-import SingleIssue from './SingleIssue';
+import SingleProject from './SingleProject';
 
 interface Params {
   params: {
-    issueId: string;
+    projectId: string;
   };
 }
 
@@ -20,8 +20,8 @@ interface Params {
 // }
 
 function page({ params }: Params) {
-  const issueId = params.issueId;
-  return <SingleIssue issueId={issueId} />;
+  const projectId = params.projectId;
+  return <SingleProject projectId={projectId} />;
 }
 
 export default page;

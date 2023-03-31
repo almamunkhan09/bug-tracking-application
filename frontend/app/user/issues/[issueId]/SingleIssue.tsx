@@ -7,76 +7,114 @@ import {
   PencilIcon,
 } from '@heroicons/react/20/solid';
 import { UserCircleIcon } from '@heroicons/react/24/solid';
+import { yupResolver } from '@hookform/resolvers/yup';
+import axios from 'axios';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import * as yup from 'yup';
 
-const user = {
-  id: '1234567',
-  name: 'Whitney Francis',
-  email: 'whitney@example.com',
-  profilePicture:
-    'https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=256&h=256&q=80',
-};
-
-const issue = {
-  id: '12345',
-  title: 'ARIA attribute misspelled',
-  description:
-    'Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita, hic? Commodi cumque similique id tempora molestiae deserunt at suscipit, dolor voluptatem, numquam, harum consequatur laboriosam voluptas tempore aut voluptatum alias',
-  status: 'open',
-  priority: 'low',
+type Issue = {
+  id: string;
+  title: string;
+  description: string;
+  status: string;
+  priority: string;
+  reporterId: string;
+  assigneeIds: string[];
+  relatedProjectId: string;
+  commentsIds: [];
+  createdAt: string;
+  updatedAt: string;
   reporter: {
-    id: '1',
-    name: 'Al Mamun Khan',
-  },
-  assignees: [
-    {
-      id: '12',
-      name: 'Majharul Islam',
-      profilePicture:
-        'https://images.unsplash.com/photo-1520785643438-5bf77931f493?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=256&h=256&q=80',
-    },
-    {
-      id: '122',
-      name: 'Shayan',
-      profilePicture: '',
-    },
-  ],
+    name: string;
+    id: string;
+  };
+  assignees?: {
+    name: string;
+    id: string;
+    profilePicture: string;
+  }[];
   relatedProject: {
-    id: '123456',
-    title: 'Project Name',
-  },
-  comments: [
-    {
-      id: '123',
-      content:
-        'Ducimus quas delectus ad maxime totam doloribus reiciendis ex. Tempore dolorem maiores. Similique voluptatibus tempore non ut.',
-      commentedBy: {
-        name: 'Leslie Alexander',
-        id: '11',
-        profilePicture:
-          'https://images.unsplash.com/photo-1520785643438-5bf77931f493?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=256&h=256&q=80',
-      },
-      createdAt: '2022-02-02',
-      updatedAt: '2023-04-04',
-    },
-    {
-      id: '1234',
-      content:
-        'Et ut autem. Voluptatem eum dolores sint necessitatibus quos. Quis eum qui dolorem accusantium voluptas voluptatem ipsum. Quo facere iusto quia accusamus veniam id explicabo et aut.',
-      commentedBy: {
-        name: 'Michael Foster',
-        id: '11',
-        profilePicture: '',
-      },
-      createdAt: '2022-02-02',
-      updatedAt: '2023-04-04',
-    },
-  ],
-  createdAt: '2021-02-02',
-  updatedAt: '2022-03-02',
+    id: string;
+    title: string;
+  };
+  comments?: {
+    id: string;
+    content: string;
+    commentedBy: {
+      name: string;
+      id: string;
+      profilePicture: string;
+    };
+    createdAt: string;
+    updatedAt: string;
+  }[];
 };
 
-function SingleIssue() {
+type User = {
+  id: string;
+  name: string;
+  isAdmin: boolean;
+  profilePicture: string;
+  email: string;
+};
+
+function daysdiff(inputDate: string) {
+  const date = new Date(inputDate);
+  const timeDiff = Math.abs(new Date(Date.now()).getTime() - date.getTime());
+  return Math.floor(timeDiff / (1000 * 60 * 60 * 20));
+}
+
+interface IssueId {
+  issueId: string;
+}
+const schema = yup.object().shape({
+  content: yup.string().required(),
+  description: yup.string().required(),
+  // maintainer: yup.array().of(yup.string()).required(),
+  deadline: yup.date().required(),
+});
+
+type Inputs = {
+  content: string;
+};
+
+function SingleIssue({ issueId }: IssueId) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<Inputs>({
+    resolver: yupResolver(schema),
+  });
+  const [issue, setIssue] = useState<Issue | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const stringifiedUser = localStorage.getItem('user');
+    const userInfo = stringifiedUser && JSON.parse(stringifiedUser);
+    setUser(userInfo);
+    axios
+      .get(`http://localhost:3600/api/issues/${issueId}`)
+      .then((res) => {
+        setIssue(res.data);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+  // const onSubmit: SubmitHandler<Content> = (data) => {
+  //   const requestData = {
+  //     content: data.content,
+  //     issueId,
+  //     commentedBy: user?.id,
+  //   };
+  //   console.log(data);
+  //   console.log('requested data', requestData);
+  //   reset();
+  // };
+  if (!issue) return <div> Loading ...</div>;
   return (
     <div>
       <main className="flex-1">
@@ -93,7 +131,7 @@ function SingleIssue() {
                       <p className="mt-2 text-sm text-gray-500">
                         #{issue.id} opened by {issue.reporter.name} in{' '}
                         <Link
-                          href={`/user/project/${issue.relatedProject.id}`}
+                          href={`/user/projects/${issue.relatedProject.id}`}
                           className="font-medium text-gray-900"
                         >
                           {issue.relatedProject.title}
@@ -144,7 +182,7 @@ function SingleIssue() {
                           aria-hidden="true"
                         />
                         <span className="text-sm font-medium text-gray-900">
-                          {issue.comments.length}comments
+                          {issue.comments?.length}comments
                         </span>
                       </div>
                       <div className="flex items-center space-x-2">
@@ -153,7 +191,10 @@ function SingleIssue() {
                           aria-hidden="true"
                         />
                         <span className="text-sm font-medium text-gray-900">
-                          Repoted on <time>{issue.createdAt}</time>
+                          Reported on{' '}
+                          <time>
+                            {new Date(issue.createdAt).toDateString()}
+                          </time>
                         </span>
                       </div>
                     </div>
@@ -163,7 +204,7 @@ function SingleIssue() {
                           Assignees
                         </h2>
                         <ul className="mt-3 space-y-3">
-                          {issue.assignees.map((assignee) => {
+                          {issue.assignees?.map((assignee) => {
                             return (
                               <li
                                 key={`key-${assignee.id}`}
@@ -220,7 +261,7 @@ function SingleIssue() {
                     </div>
                     <div className="px-4 py-6 sm:px-6">
                       <ul className="space-y-8">
-                        {issue.comments.map((comment) => (
+                        {issue.comments?.map((comment) => (
                           <li key={`key-${comment.id}`}>
                             <div className="flex space-x-3">
                               <div className="flex-shrink-0">
@@ -247,10 +288,10 @@ function SingleIssue() {
                                 </div>
                                 <div className="mt-2 space-x-2 text-sm">
                                   <span className="font-medium text-gray-500">
-                                    {comment.createdAt}
-                                  </span>{' '}
+                                    {daysdiff(comment.createdAt)}
+                                  </span>
                                   <span className="font-medium text-gray-500">
-                                    &middot;
+                                    day ago
                                   </span>{' '}
                                 </div>
                               </div>
@@ -263,7 +304,7 @@ function SingleIssue() {
                   <div className="bg-gray-50 px-4 py-6 sm:px-6">
                     <div className="flex space-x-3">
                       <div className="flex-shrink-0">
-                        {user.profilePicture ? (
+                        {user?.profilePicture ? (
                           <img
                             className="h-10 w-10 rounded-full"
                             src={user.profilePicture}
@@ -276,18 +317,19 @@ function SingleIssue() {
                         )}
                       </div>
                       <div className="min-w-0 flex-1">
-                        <form action="#">
+                        <form onSubmit={handleSubmit(onSubmit)}>
                           <div>
                             <label htmlFor="comment" className="sr-only">
                               About
                             </label>
                             <textarea
                               id="comment"
-                              name="comment"
                               rows={3}
+                              {...register('content')}
                               className="block w-full rounded-md border-0 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:py-1.5 sm:text-sm sm:leading-6"
                               placeholder="Add a note"
                             />
+                            {errors.content?.message}
                           </div>
                           <div className="mt-3 flex items-center justify-start">
                             <button className="inline-flex items-center justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
@@ -356,7 +398,7 @@ function SingleIssue() {
                     aria-hidden="true"
                   />
                   <span className="text-sm font-medium text-gray-900">
-                    {issue.comments.length} comments
+                    {issue.comments?.length} comments
                   </span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -365,7 +407,8 @@ function SingleIssue() {
                     aria-hidden="true"
                   />
                   <span className="text-sm font-medium text-gray-900">
-                    Created on <time> {issue.createdAt}</time>
+                    Created on{' '}
+                    <time> {new Date(issue.createdAt).toDateString()}</time>
                   </span>
                 </div>
               </div>
@@ -375,7 +418,7 @@ function SingleIssue() {
                     Assignees
                   </h2>
                   <ul className="mt-3 space-y-3">
-                    {issue.assignees.map((assignee) => {
+                    {issue.assignees?.map((assignee) => {
                       return (
                         <li
                           key={`key-${assignee.id}`}
