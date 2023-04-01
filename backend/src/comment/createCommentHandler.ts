@@ -10,6 +10,8 @@ interface NewComment {
 export default async function createComment(req: Request, res: Response) {
   const { content, issueId, commentedById }: NewComment = req.body;
 
+  console.log(content, issueId, commentedById);
+
   try {
     const newComment = await prisma.comment.create({
       data: {

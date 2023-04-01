@@ -10,6 +10,7 @@ import { UserCircleIcon } from '@heroicons/react/24/solid';
 import { yupResolver } from '@hookform/resolvers/yup';
 import axios from 'axios';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
@@ -71,9 +72,6 @@ interface IssueId {
 }
 const schema = yup.object().shape({
   content: yup.string().required(),
-  description: yup.string().required(),
-  // maintainer: yup.array().of(yup.string()).required(),
-  deadline: yup.date().required(),
 });
 
 type Inputs = {
@@ -81,6 +79,8 @@ type Inputs = {
 };
 
 function SingleIssue({ issueId }: IssueId) {
+  const [change, setChange] = useState<boolean>(false);
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -92,6 +92,26 @@ function SingleIssue({ issueId }: IssueId) {
   const [issue, setIssue] = useState<Issue | null>(null);
   const [user, setUser] = useState<User | null>(null);
 
+  const config = {
+    withCredentials: true,
+  };
+
+  const createComment = async (reqData: {
+    content: string;
+    issueId: string;
+    commentedById: string | undefined;
+  }) => {
+    try {
+      const response = await axios.post(
+        'http://localhost:3600/api/comments',
+        reqData,
+        config,
+      );
+    } catch (error: any) {
+      console.error('Error:', error.message);
+    }
+  };
+
   useEffect(() => {
     const stringifiedUser = localStorage.getItem('user');
     const userInfo = stringifiedUser && JSON.parse(stringifiedUser);
@@ -102,18 +122,36 @@ function SingleIssue({ issueId }: IssueId) {
         setIssue(res.data);
       })
       .catch((err) => console.log(err));
-  }, []);
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
-  // const onSubmit: SubmitHandler<Content> = (data) => {
-  //   const requestData = {
-  //     content: data.content,
-  //     issueId,
-  //     commentedBy: user?.id,
-  //   };
-  //   console.log(data);
-  //   console.log('requested data', requestData);
-  //   reset();
-  // };
+  }, [change]);
+  // const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    const requestData = {
+      content: data.content,
+      issueId,
+      commentedById: user?.id,
+    };
+    console.log(data);
+    console.log('requested data', requestData);
+
+    await createComment(requestData);
+    reset();
+    setChange((preValue) => !preValue);
+    router.refresh();
+  };
+
+  const oncloseHandler = async () => {
+    axios
+      .put(`http://localhost:3600/api/issues/${issueId}`, { status: 'closed' })
+      .then((res) => setChange((prev) => !prev))
+      .catch((err) => console.log(err));
+  };
+  const onOpeneHandler = async () => {
+    axios
+      .put(`http://localhost:3600/api/issues/${issueId}`, { status: 'open' })
+      .then((res) => setChange((prev) => !prev))
+      .catch((err) => console.log(err));
+  };
+
   if (!issue) return <div> Loading ...</div>;
   return (
     <div>
@@ -301,7 +339,11 @@ function SingleIssue({ issueId }: IssueId) {
                       </ul>
                     </div>
                   </div>
-                  <div className="bg-gray-50 px-4 py-6 sm:px-6">
+                  <div
+                    className={`bg-gray-50 px-4 py-6 sm:px-6 ${
+                      issue.status === 'open' ? ' ' : 'hidden'
+                    }`}
+                  >
                     <div className="flex space-x-3">
                       <div className="flex-shrink-0">
                         {user?.profilePicture ? (
@@ -346,17 +388,19 @@ function SingleIssue({ issueId }: IssueId) {
                 {issue.status === 'open' ? (
                   <button
                     type="button"
+                    onClick={() => oncloseHandler()}
                     className="inline-flex justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                   >
                     <LockClosedIcon
                       className="-ml-0.5 h-5 w-5 text-red-400"
                       aria-hidden="true"
                     />
-                    Close
+                    Close The Issue
                   </button>
                 ) : (
                   <button
                     type="button"
+                    onClick={() => onOpeneHandler()}
                     className="inline-flex justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                   >
                     <LockOpenIcon
