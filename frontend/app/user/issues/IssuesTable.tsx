@@ -1,38 +1,25 @@
+'use client';
+import axios from 'axios';
 import Link from 'next/link';
-import IssueModal from './IssueModal';
-
-const issues = [
-  {
-    id: '1',
-    title: 'There is bug in graphql api',
-    description:
-      'Hi is is not working well .................. Hdgajdbajkdadnasdl',
-    project: 'Graphql Api',
-    status: 'open',
-    priority: 'low',
-    dueDate: '22.2..23',
-    reportedBy: 'Al Mamun Khan',
-    assignees: ['Al Mamun khan', 'Majharul Islam'],
-  },
-  {
-    id: '2',
-    title: 'There is bug in rest Api',
-    description:
-      'Hi is is not working well .................. Hdgajdbajkdadnasdl',
-    project: 'Rest Api',
-    status: 'open',
-    priority: 'low',
-    dueDate: '22.2..23',
-    reportedBy: 'Al Mamun Khan',
-    assignees: ['Al Mamun khan', 'Majharul Islam'],
-  },
-];
-
-// function classNames(...classes: string[]) {
-//   return classes.filter(Boolean).join(' ');
-// }
+import { useEffect, useState } from 'react';
 
 export default function IssuesTable() {
+  const stringifiedUser = localStorage.getItem('user');
+  const user = stringifiedUser && JSON.parse(stringifiedUser);
+  const [issues, setIssues] = useState<any | null>(null);
+  useEffect(() => {
+    // setProjects(projects1);
+    axios
+      .get(`http://localhost:3600/api/users/${user.id}/relatedissues`)
+      .then((res) => setIssues(res.data))
+      .catch((err) => console.log(err));
+  }, []);
+  if (!issues) {
+    return <div> Loading ...</div>;
+  }
+  if (!issues.length) {
+    return <h2> You are not Assosiated with any Issue</h2>;
+  }
   return (
     <div className="px-4 sm:px-6 lg:px-8">
       <div className="sm:flex sm:items-center">
@@ -40,9 +27,6 @@ export default function IssuesTable() {
           <h1 className="text-base font-semibold leading-6 text-gray-900">
             Issues
           </h1>
-        </div>
-        <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-          <IssueModal />
         </div>
       </div>
       <div className="mt-8 flow-root">
@@ -100,7 +84,9 @@ export default function IssuesTable() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {issues.map((issue) => (
+                {' '}
+                {/* Here is a type error need to fix later*/}
+                {issues.map((issue: any) => (
                   <tr key={`key-${issue.id}`}>
                     <td className=" py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0 ">
                       <Link href={`/user/issues/${issue.id}`}>{issue.id}</Link>
@@ -109,19 +95,21 @@ export default function IssuesTable() {
                       {issue.title}
                     </td>
                     <td className=" py-4 px-3 text-sm text-gray-500">
-                      {issue.project}
+                      {issue.relatedProject.title}
                     </td>
                     <td className=" py-4 px-3 text-sm text-gray-500">
-                      {issue.reportedBy}
+                      {issue.reporter.name}
+                    </td>
+                    <td className=" py-4 px-3 text-sm text-gray-500">
+                      {issue.status}
                     </td>
                     <td className=" py-4 px-3 text-sm text-gray-500">
                       {issue.priority}
                     </td>
                     <td className=" py-4 px-3 text-sm text-gray-500">
-                      {issue.status}
-                    </td>
-                    <td className=" py-4 px-3 text-sm text-gray-500">
-                      {issue.status}
+                      {issue.assignees
+                        .map((assignee: any) => assignee.name)
+                        .join(',')}
                     </td>
                     <td className="relative  py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                       <Link

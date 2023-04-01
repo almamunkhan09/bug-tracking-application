@@ -197,14 +197,26 @@ export async function issueAssignedTo(assigneeId: string) {
         },
       },
     },
-    include: {
-      reporter: { select: { name: true } },
-      assignees: { select: { name: true } },
-      relatedProject: { select: { title: true } },
+    select: {
+      id: true,
+      title: true,
+      description: true,
+      relatedProject: { select: { id: true, title: true } },
+      status: true,
+      priority: true,
+      reporter: {
+        select: { id: true, name: true, isAdmin: true, profilePicture: true },
+      },
+      assignees: {
+        select: { name: true, id: true, profilePicture: true, isAdmin: true },
+      },
     },
   });
 }
 
+export async function allIssues() {
+  return await prisma.issue.findMany();
+}
 export async function deleteIssue(issueId: string) {
   return await prisma.issue.delete({
     where: {

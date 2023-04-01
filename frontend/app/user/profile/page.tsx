@@ -13,16 +13,6 @@ type User = {
   profilePicture: string;
 };
 
-// const user = {
-//   id: '1',
-//   name: 'Al Mamun khan',
-//   isAdmin: true,
-//   profilePicture:
-//     'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60',
-//   email: 'almamunkhan09@gmail.com',
-//   ceartedAt: '2017-01-05T20:35:40',
-// };
-
 function Page() {
   const [editOpen, setEditOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);

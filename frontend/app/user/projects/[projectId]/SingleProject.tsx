@@ -5,9 +5,10 @@ import {
   PencilIcon,
 } from '@heroicons/react/20/solid';
 import { ClockIcon, UserCircleIcon } from '@heroicons/react/24/solid';
-import axios, { Axios } from 'axios';
+import axios from 'axios';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import NewIssue from '../../issues/NewIssue';
 
 type Project = {
   id: string;
@@ -46,48 +47,13 @@ type Project = {
   message: 'Get the project Successfully';
 };
 
-// const project = {
-//   id: '6425045f0af8ae24a2846818',
-//   title: 'Rest Api for the weather App',
-//   description:
-//     'Need to build a new Restful Api for weather application. It is few falut while loading the Api ',
-//   createdById: '6424ae43efac6530033845ef',
-//   maintainerIds: ['6424ae45efac6530033845f0'],
-//   issuesIds: [],
-//   createdAt: '2023-03-30T03:39:11.008Z',
-//   updatedAt: '2023-03-30T03:39:11.008Z',
-//   createdBy: {
-//     id: '6424ae43efac6530033845ef',
-//     name: 'Al Mamun Khan',
-//     profilePicture: null,
-//     email: 'almamun@gmail.com',
-//   },
-//   maintainers: [
-//     {
-//       id: '6424ae45efac6530033845f0',
-//       name: 'Khan Al Mamun',
-//       profilePicture: null,
-//       email: 'khanAl@gmail.com',
-//     },
-//   ],
-//   issues: [
-//     {
-//       id: '1',
-//       title: 'Package a is not working',
-//       reportedBy: 'Al Mamun Khan',
-//       status: 'open',
-//       priority: 'low',
-//     },
-//   ],
-//   message: 'Get the project Successfully',
-// };
-
 interface ProjectId {
   projectId: string;
 }
 
 export default function SingleProject({ projectId }: ProjectId) {
   const [project, setProject] = useState<Project | null>(null);
+  const [open, setOpen] = useState(false);
   useEffect(() => {
     axios
       .get(`http://localhost:3600/api/projects/${projectId}`)
@@ -126,6 +92,22 @@ export default function SingleProject({ projectId }: ProjectId) {
                         />
                         Edit
                       </button>
+                      <button
+                        type="button"
+                        onClick={() => setOpen((preValue) => !preValue)}
+                        className="inline-flex justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                      >
+                        <BugAntIcon
+                          className="-ml-0.5 h-5 w-5 text-gray-400"
+                          aria-hidden="true"
+                        />
+                        New Issue
+                      </button>
+                      <NewIssue
+                        open={open}
+                        setOpen={setOpen}
+                        projectId={projectId}
+                      />
                     </div>
                   </div>
                   <aside className="mt-8 xl:hidden">

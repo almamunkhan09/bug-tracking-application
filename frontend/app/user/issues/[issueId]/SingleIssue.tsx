@@ -176,7 +176,11 @@ function SingleIssue({ issueId }: IssueId) {
                         </Link>
                       </p>
                     </div>
-                    <div className="mt-4 flex space-x-3 md:mt-0">
+                    <div
+                      className={`mt-4 flex space-x-3 md:mt-0 ${
+                        issue.status === 'open' ? ' ' : 'hidden'
+                      }`}
+                    >
                       <button
                         type="button"
                         className="inline-flex justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"

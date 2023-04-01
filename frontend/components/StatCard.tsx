@@ -1,4 +1,3 @@
-// import { EllipsisVerticalIcon } from '@heroicons/react/20/solid';
 import uniqolor from 'uniqolor';
 
 const projects = [

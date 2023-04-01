@@ -44,4 +44,4 @@ users.put('/:id', updateValidate, varifyUser, updateUser);
 users.delete('/:id', varifyUser, deleteUser);
 users.get('/:id/projects', projectByUserId);
 users.get('/:id/userissues', getIssuesByReporter);
-users.get('/:id/assignedIssue', getAssignedIssues);
+users.get('/:id/relatedissues', getAssignedIssues);

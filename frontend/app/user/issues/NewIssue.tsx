@@ -13,15 +13,8 @@ import * as yup from 'yup';
 interface AppProps {
   open: boolean;
   setOpen: (value: boolean) => void;
+  projectId: string;
 }
-
-// const people = [
-//   { value: '1', label: 'Wade Cooper' },
-//   { value: '2', label: 'Arlene Mccoy' },
-//   { value: '3', label: 'Devon Webb' },
-//   { value: '4', label: 'Tom Cook' },
-//   { value: '5', label: 'Tanya Fox' },
-// ];
 
 type PeopleType = {
   id: string;
@@ -47,11 +40,9 @@ type Inputs = {
 const schema = yup.object().shape({
   title: yup.string().required(),
   description: yup.string().required(),
-  // maintainer: yup.array().of(yup.string()).required(),
-  deadline: yup.date().required(),
 });
 
-export default function NewProjectForm({ open, setOpen }: AppProps) {
+export default function NewIssue({ open, setOpen, projectId }: AppProps) {
   const [people, setPeople] = useState<
     { value: string; label: string }[] | null
   >(null);
@@ -60,7 +51,10 @@ export default function NewProjectForm({ open, setOpen }: AppProps) {
       .get('http://localhost:3600/api/users/')
       .then((response) => {
         const teamMembers: PeopleType = response.data;
-        const team: { value: string; label: string }[] = teamMembers.map(
+        const developers: PeopleType = teamMembers.filter(
+          (member) => !member.isAdmin,
+        );
+        const team: { value: string; label: string }[] = developers.map(
           (member) => ({
             value: member.id,
             label: member.name,
@@ -86,30 +80,32 @@ export default function NewProjectForm({ open, setOpen }: AppProps) {
   });
 
   const [selectedOption, setSelectedOption] = useState<Option[] | null>(null);
+  const [priority, setPriority] = useState<string>('low');
 
-  const handleSelectChange = (selectedOption: Option[]) => {
-    setSelectedOption(selectedOption);
+  const handleSelectChange = (option: Option[]) => {
+    setSelectedOption(option);
   };
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     console.log(data, selectedOption);
+    console.log(priority);
     const requestData = {
       title: data.title,
       description: data.description,
-      createdById: user.id,
-      maintainersId:
+      relatedProjectId: projectId,
+      priority: priority,
+      reporterId: user.id,
+      assigneeIds:
         selectedOption &&
         selectedOption.map(
           (item: { value: string; label: string }) => item.value,
         ),
-      deadline: new Date(data.deadline).toDateString(),
     };
 
     console.log(requestData);
+    setOpen(false);
     reset();
   };
-
-  // const [open, setOpen] = useState(true);
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -137,7 +133,7 @@ export default function NewProjectForm({ open, setOpen }: AppProps) {
                       <div className="bg-indigo-700 py-6 px-4 sm:px-6">
                         <div className="flex items-center justify-between">
                           <Dialog.Title className="text-base font-semibold leading-6 text-white">
-                            New Project
+                            New Issue
                           </Dialog.Title>
                           <div className="ml-3 flex h-7 items-center">
                             <button
@@ -155,8 +151,7 @@ export default function NewProjectForm({ open, setOpen }: AppProps) {
                         </div>
                         <div className="mt-1">
                           <p className="text-sm text-indigo-300">
-                            Fill the information to create a new project in your
-                            team
+                            Fill the information to create a in this project
                           </p>
                         </div>
                       </div>
@@ -168,13 +163,13 @@ export default function NewProjectForm({ open, setOpen }: AppProps) {
                                 htmlFor="project-name"
                                 className="block text-sm font-medium leading-6 text-gray-900"
                               >
-                                Project Title
+                                Issue Title
                               </label>
                               <div className="mt-2">
                                 <input
                                   id="project-name"
                                   {...register('title')}
-                                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                  className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                 />
                                 {errors.title?.message}
                               </div>
@@ -191,7 +186,7 @@ export default function NewProjectForm({ open, setOpen }: AppProps) {
                                   id="description"
                                   {...register('description')}
                                   rows={4}
-                                  className="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6"
+                                  className="block w-full px-2 rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6"
                                   defaultValue=""
                                 />
                                 {errors.description?.message}
@@ -199,15 +194,14 @@ export default function NewProjectForm({ open, setOpen }: AppProps) {
                             </div>
                             <div>
                               {!people ? (
-                                ''
+                                'Sorry There is no developers in your Team'
                               ) : (
                                 <>
                                   <h3 className="text-sm font-medium leading-6 text-gray-900">
-                                    Team Members
+                                    Assignees
                                   </h3>
                                   <div className="mt-2">
                                     <Select
-                                      // defaultValue={[people[2], people[3]]}
                                       isMulti
                                       options={people}
                                       // @ts-ignore
@@ -222,14 +216,23 @@ export default function NewProjectForm({ open, setOpen }: AppProps) {
                             </div>
                             <div>
                               <h3 className="text-sm font-medium leading-6 text-gray-900">
-                                Deadline
+                                Priority
                               </h3>
                               <div className="mt-2">
-                                <input
-                                  type="date"
-                                  {...register('deadline')}
-                                  min={new Date().toISOString().split('T')[0]}
-                                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                <Select
+                                  defaultValue={{ value: 'Low', label: 'Low' }}
+                                  options={[
+                                    { value: 'Low', label: 'Low' },
+                                    { value: 'Medium', label: 'Medium' },
+                                    { value: 'High', label: 'High' },
+                                  ]}
+                                  onChange={(event: any) => {
+                                    setPriority(event.value);
+                                    console.log(event.value);
+                                  }}
+                                  required
+                                  className="basic-select block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 "
+                                  classNamePrefix="select"
                                 />
                               </div>
                             </div>
@@ -238,7 +241,7 @@ export default function NewProjectForm({ open, setOpen }: AppProps) {
                       </div>
                     </div>
                     {!people ? (
-                      'Unable to fetch members information'
+                      'Not Possible to create Issue. May be there is no developer in your team '
                     ) : (
                       <div className="flex flex-shrink-0 justify-end px-4 py-4">
                         <button
