@@ -14,8 +14,9 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
+import EidtIssue from '../EditIssue';
 
-type Issue = {
+export type Issue = {
   id: string;
   title: string;
   description: string;
@@ -78,8 +79,24 @@ type Inputs = {
   content: string;
 };
 
+const config = {
+  withCredentials: true,
+};
+const createComment = async (reqData: {
+  content: string;
+  issueId: string;
+  commentedById: string | undefined;
+}) => {
+  try {
+    await axios.post('http://localhost:3600/api/comments', reqData, config);
+  } catch (error: any) {
+    console.error('Error:', error.message);
+  }
+};
+
 function SingleIssue({ issueId }: IssueId) {
   const [change, setChange] = useState<boolean>(false);
+  const [editOpen, setEditOpen] = useState<boolean>(false);
   const router = useRouter();
   const {
     register,
@@ -91,26 +108,6 @@ function SingleIssue({ issueId }: IssueId) {
   });
   const [issue, setIssue] = useState<Issue | null>(null);
   const [user, setUser] = useState<User | null>(null);
-
-  const config = {
-    withCredentials: true,
-  };
-
-  const createComment = async (reqData: {
-    content: string;
-    issueId: string;
-    commentedById: string | undefined;
-  }) => {
-    try {
-      const response = await axios.post(
-        'http://localhost:3600/api/comments',
-        reqData,
-        config,
-      );
-    } catch (error: any) {
-      console.error('Error:', error.message);
-    }
-  };
 
   useEffect(() => {
     const stringifiedUser = localStorage.getItem('user');
@@ -178,11 +175,12 @@ function SingleIssue({ issueId }: IssueId) {
                     </div>
                     <div
                       className={`mt-4 flex space-x-3 md:mt-0 ${
-                        issue.status === 'open' ? ' ' : 'hidden'
+                        issue.status.toLowerCase() === 'open' ? ' ' : 'hidden'
                       }`}
                     >
                       <button
                         type="button"
+                        onClick={() => setEditOpen(true)}
                         className="inline-flex justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                       >
                         <PencilIcon
@@ -191,12 +189,19 @@ function SingleIssue({ issueId }: IssueId) {
                         />
                         Edit
                       </button>
+                      <EidtIssue
+                        open={editOpen}
+                        setOpen={setEditOpen}
+                        issue={issue}
+                        setChange={setChange}
+                        change={change}
+                      />
                     </div>
                   </div>
                   <aside className="mt-8 xl:hidden">
                     <h2 className="sr-only">Details</h2>
                     <div className="space-y-5">
-                      {issue.status === 'open' ? (
+                      {issue.status.toLowerCase() === 'open' ? (
                         <div className="flex items-center space-x-2">
                           <LockOpenIcon
                             className="h-5 w-5 text-green-500"
@@ -345,7 +350,7 @@ function SingleIssue({ issueId }: IssueId) {
                   </div>
                   <div
                     className={`bg-gray-50 px-4 py-6 sm:px-6 ${
-                      issue.status === 'open' ? ' ' : 'hidden'
+                      issue.status.toLowerCase() === 'open' ? ' ' : 'hidden'
                     }`}
                   >
                     <div className="flex space-x-3">
@@ -389,7 +394,7 @@ function SingleIssue({ issueId }: IssueId) {
                 </div>
               </section>
               <div className="mt-10 flex items-center justify-end">
-                {issue.status === 'open' ? (
+                {issue.status.toLowerCase() === 'open' ? (
                   <button
                     type="button"
                     onClick={() => oncloseHandler()}
@@ -419,7 +424,7 @@ function SingleIssue({ issueId }: IssueId) {
             <aside className="hidden xl:block xl:pl-8">
               <h2 className="sr-only">Details</h2>
               <div className="space-y-5">
-                {issue.status === 'open' ? (
+                {issue.status.toLowerCase() === 'open' ? (
                   <div className="flex items-center space-x-2">
                     <LockOpenIcon
                       className="h-5 w-5 text-green-500"

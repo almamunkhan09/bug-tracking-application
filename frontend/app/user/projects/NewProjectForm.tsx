@@ -1,10 +1,8 @@
 'use client';
 import { Dialog, Transition } from '@headlessui/react';
-// import { PlusIcon } from '@heroicons/react/20/solid';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { yupResolver } from '@hookform/resolvers/yup';
 import axios from 'axios';
-// import Link from 'next/link';
 import React, { Fragment, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import Select from 'react-select';
@@ -14,15 +12,23 @@ interface AppProps {
   open: boolean;
   setOpen: (value: boolean) => void;
 }
+type ReqData = {
+  title: string;
+  description: string;
+  createdById: string;
+  maintainerIds: string[] | null;
+};
 
-// const people = [
-//   { value: '1', label: 'Wade Cooper' },
-//   { value: '2', label: 'Arlene Mccoy' },
-//   { value: '3', label: 'Devon Webb' },
-//   { value: '4', label: 'Tom Cook' },
-//   { value: '5', label: 'Tanya Fox' },
-// ];
-
+const createProject = async (reqData: ReqData) => {
+  const config = {
+    withCredentials: true,
+  };
+  try {
+    await axios.post(`http://localhost:3600/api/projects`, reqData, config);
+  } catch (error: any) {
+    console.error('Error:', error.message);
+  }
+};
 type PeopleType = {
   id: string;
   name: string;
@@ -40,14 +46,12 @@ type Option = {
 type Inputs = {
   title: string;
   description: string;
-  // maintainers: string[];
   deadline: Date;
 };
 
 const schema = yup.object().shape({
   title: yup.string().required(),
   description: yup.string().required(),
-  // maintainer: yup.array().of(yup.string()).required(),
   deadline: yup.date().required(),
 });
 
@@ -87,26 +91,27 @@ export default function NewProjectForm({ open, setOpen }: AppProps) {
 
   const [selectedOption, setSelectedOption] = useState<Option[] | null>(null);
 
-  const handleSelectChange = (selectedOption: Option[]) => {
-    setSelectedOption(selectedOption);
+  const handleSelectChange = (option: Option[]) => {
+    setSelectedOption(option);
   };
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
     console.log(data, selectedOption);
     const requestData = {
       title: data.title,
       description: data.description,
       createdById: user.id,
-      maintainersId:
+      maintainerIds:
         selectedOption &&
         selectedOption.map(
           (item: { value: string; label: string }) => item.value,
         ),
-      deadline: new Date(data.deadline).toDateString(),
+      // deadline: new Date(data.deadline).toDateString(),
     };
 
-    console.log(requestData);
+    await createProject(requestData);
     reset();
+    setOpen(false);
   };
 
   // const [open, setOpen] = useState(true);
@@ -174,7 +179,7 @@ export default function NewProjectForm({ open, setOpen }: AppProps) {
                                 <input
                                   id="project-name"
                                   {...register('title')}
-                                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                  className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                 />
                                 {errors.title?.message}
                               </div>
@@ -191,7 +196,7 @@ export default function NewProjectForm({ open, setOpen }: AppProps) {
                                   id="description"
                                   {...register('description')}
                                   rows={4}
-                                  className="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6"
+                                  className="block w-full rounded-md border-0 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6"
                                   defaultValue=""
                                 />
                                 {errors.description?.message}

@@ -19,6 +19,7 @@ type Project = {
   issuesIds: string[];
   createdAt: string;
   updatedAt: string;
+  deadline?: string;
   createdBy: {
     id: string;
     name: string;

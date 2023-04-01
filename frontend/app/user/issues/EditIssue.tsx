@@ -1,19 +1,20 @@
 'use client';
 import { Dialog, Transition } from '@headlessui/react';
-// import { PlusIcon } from '@heroicons/react/20/solid';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { yupResolver } from '@hookform/resolvers/yup';
 import axios from 'axios';
-// import Link from 'next/link';
 import React, { Fragment, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import Select from 'react-select';
 import * as yup from 'yup';
+import { Issue } from './[issueId]/SingleIssue';
 
 interface AppProps {
   open: boolean;
   setOpen: (value: boolean) => void;
-  projectId: string;
+  setChange: (value: boolean) => void;
+  issue: Issue;
+  change: boolean;
 }
 
 type PeopleType = {
@@ -33,8 +34,6 @@ type Option = {
 type Inputs = {
   title: string;
   description: string;
-  // maintainers: string[];
-  deadline: Date;
 };
 
 const schema = yup.object().shape({
@@ -45,25 +44,32 @@ const schema = yup.object().shape({
 type ReqData = {
   title: string;
   description: string;
-  status?: string;
   priority: string;
-  reporterId: string;
   assigneeIds: string[] | null;
-  relatedProjectId: string;
 };
 
-const createIssue = async (reqData: ReqData) => {
+const updateIssue = async (reqData: ReqData, issueId: string) => {
   const config = {
     withCredentials: true,
   };
   try {
-    await axios.post('http://localhost:3600/api/issues', reqData, config);
+    await axios.put(
+      `http://localhost:3600/api/issues/${issueId}`,
+      reqData,
+      config,
+    );
   } catch (error: any) {
     console.error('Error:', error.message);
   }
 };
 
-export default function NewIssue({ open, setOpen, projectId }: AppProps) {
+export default function EidtIssue({
+  open,
+  setOpen,
+  issue,
+  setChange,
+  change,
+}: AppProps) {
   const [people, setPeople] = useState<
     { value: string; label: string }[] | null
   >(null);
@@ -81,16 +87,22 @@ export default function NewIssue({ open, setOpen, projectId }: AppProps) {
             label: member.name,
           }),
         );
-        console.log('team', team);
         setPeople(team);
-        console.log('ProjectForm', response.data);
+        // console.log(issue);
       })
       .catch((error) => {
         console.log(error);
       });
   }, []);
-  const stringifiedUser = localStorage.getItem('user');
-  const user = stringifiedUser && JSON.parse(stringifiedUser);
+
+  let defaultPeople: { value: string; label: string }[] = [];
+  if (issue.assignees?.length) {
+    defaultPeople = issue.assignees.map((member) => ({
+      value: member.id,
+      label: member.name,
+    }));
+  }
+
   const {
     register,
     handleSubmit,
@@ -100,8 +112,11 @@ export default function NewIssue({ open, setOpen, projectId }: AppProps) {
     resolver: yupResolver(schema),
   });
 
-  const [selectedOption, setSelectedOption] = useState<Option[] | null>(null);
-  const [priority, setPriority] = useState<string>('low');
+  const [selectedOption, setSelectedOption] = useState<Option[] | null>(
+    defaultPeople,
+  );
+
+  const [priority, setPriority] = useState<string>(issue.priority);
 
   const handleSelectChange = (option: Option[]) => {
     setSelectedOption(option);
@@ -111,9 +126,7 @@ export default function NewIssue({ open, setOpen, projectId }: AppProps) {
     const requestData: ReqData = {
       title: data.title,
       description: data.description,
-      relatedProjectId: projectId,
       priority: priority,
-      reporterId: user.id,
       assigneeIds:
         selectedOption &&
         selectedOption.map(
@@ -122,9 +135,10 @@ export default function NewIssue({ open, setOpen, projectId }: AppProps) {
     };
 
     console.log(requestData);
-    await createIssue(requestData);
+    await updateIssue(requestData, issue.id);
     reset();
     setOpen(false);
+    setChange(!change);
   };
 
   return (
@@ -153,7 +167,7 @@ export default function NewIssue({ open, setOpen, projectId }: AppProps) {
                       <div className="bg-indigo-700 py-6 px-4 sm:px-6">
                         <div className="flex items-center justify-between">
                           <Dialog.Title className="text-base font-semibold leading-6 text-white">
-                            New Issue
+                            Edit Issue
                           </Dialog.Title>
                           <div className="ml-3 flex h-7 items-center">
                             <button
@@ -171,7 +185,7 @@ export default function NewIssue({ open, setOpen, projectId }: AppProps) {
                         </div>
                         <div className="mt-1">
                           <p className="text-sm text-indigo-300">
-                            Fill the information to create a in this project
+                            Edit the information of this Issue
                           </p>
                         </div>
                       </div>
@@ -189,6 +203,7 @@ export default function NewIssue({ open, setOpen, projectId }: AppProps) {
                                 <input
                                   id="project-name"
                                   {...register('title')}
+                                  defaultValue={issue.title}
                                   className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                 />
                                 {errors.title?.message}
@@ -207,7 +222,7 @@ export default function NewIssue({ open, setOpen, projectId }: AppProps) {
                                   {...register('description')}
                                   rows={4}
                                   className="block w-full px-2 rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6"
-                                  defaultValue=""
+                                  defaultValue={issue.description}
                                 />
                                 {errors.description?.message}
                               </div>
@@ -226,7 +241,7 @@ export default function NewIssue({ open, setOpen, projectId }: AppProps) {
                                       options={people}
                                       // @ts-ignore
                                       onChange={handleSelectChange}
-                                      required
+                                      defaultValue={defaultPeople}
                                       className="basic-multi-select block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 "
                                       classNamePrefix="select"
                                     />
@@ -240,7 +255,10 @@ export default function NewIssue({ open, setOpen, projectId }: AppProps) {
                               </h3>
                               <div className="mt-2">
                                 <Select
-                                  defaultValue={{ value: 'Low', label: 'Low' }}
+                                  defaultValue={{
+                                    value: issue.priority,
+                                    label: issue.priority,
+                                  }}
                                   options={[
                                     { value: 'Low', label: 'Low' },
                                     { value: 'Medium', label: 'Medium' },
@@ -248,7 +266,6 @@ export default function NewIssue({ open, setOpen, projectId }: AppProps) {
                                   ]}
                                   onChange={(event: any) => {
                                     setPriority(event.value);
-                                    console.log(event.value);
                                   }}
                                   required
                                   className="basic-select block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 "
@@ -260,6 +277,7 @@ export default function NewIssue({ open, setOpen, projectId }: AppProps) {
                         </div>
                       </div>
                     </div>
+
                     {!people ? (
                       'Not Possible to create Issue. May be there is no developer in your team '
                     ) : (
