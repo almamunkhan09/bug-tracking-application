@@ -11,6 +11,8 @@ import * as yup from 'yup';
 interface AppProps {
   open: boolean;
   setOpen: (value: boolean) => void;
+  change: boolean;
+  setChange: (value: boolean) => void;
 }
 type ReqData = {
   title: string;
@@ -52,10 +54,15 @@ type Inputs = {
 const schema = yup.object().shape({
   title: yup.string().required(),
   description: yup.string().required(),
-  deadline: yup.date().required(),
+  // deadline: yup.date(),
 });
 
-export default function NewProjectForm({ open, setOpen }: AppProps) {
+export default function NewProjectForm({
+  open,
+  setOpen,
+  change,
+  setChange,
+}: AppProps) {
   const [people, setPeople] = useState<
     { value: string; label: string }[] | null
   >(null);
@@ -112,6 +119,7 @@ export default function NewProjectForm({ open, setOpen }: AppProps) {
     await createProject(requestData);
     reset();
     setOpen(false);
+    setChange(!change);
   };
 
   // const [open, setOpen] = useState(true);

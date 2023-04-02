@@ -75,6 +75,7 @@ export default function CustomLayout({ children }: { children: ReactNode }) {
 
   const config = {
     withCredentials: true,
+    credentials: 'include',
   };
 
   useEffect(() => {
@@ -84,6 +85,10 @@ export default function CustomLayout({ children }: { children: ReactNode }) {
           'http://localhost:3600/api/users/singleuser',
           config,
         );
+        if (!response) {
+          setLoading(false);
+          alert('Failde to set user Information. Please login again');
+        }
         setUser(response.data);
         setLoading(false);
         localStorage.setItem('user', JSON.stringify(response.data));
@@ -296,8 +301,10 @@ export default function CustomLayout({ children }: { children: ReactNode }) {
             <span className="sr-only">Open sidebar</span>
             <Bars3BottomLeftIcon className="h-6 w-6" aria-hidden="true" />
           </button>
-          <div className="flex flex-1 justify-between px-4">
-            <div className="flex flex-1">
+          <div className="flex flex-1 justify-end px-4">
+            <div className="flex-1 hidden">
+              {' '}
+              {/* There was a flex properity */}
               <form className="flex w-full lg:ml-0" action="#" method="GET">
                 <label htmlFor="search-field" className="sr-only">
                   Search
@@ -322,7 +329,7 @@ export default function CustomLayout({ children }: { children: ReactNode }) {
             <div className="ml-4 flex items-center lg:ml-6">
               <button
                 type="button"
-                className="rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                className="rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 hidden"
               >
                 <span className="sr-only">View notifications</span>
                 <BellIcon className="h-6 w-6" aria-hidden="true" />

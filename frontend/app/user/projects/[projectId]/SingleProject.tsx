@@ -9,8 +9,9 @@ import axios from 'axios';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import NewIssue from '../../issues/NewIssue';
+import EidtProject from '../EditProject';
 
-type Project = {
+export type Project = {
   id: string;
   title: string;
   description: string;
@@ -55,12 +56,15 @@ interface ProjectId {
 export default function SingleProject({ projectId }: ProjectId) {
   const [project, setProject] = useState<Project | null>(null);
   const [open, setOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [change, setChange] = useState(false);
+
   useEffect(() => {
     axios
       .get(`http://localhost:3600/api/projects/${projectId}`)
       .then((res) => setProject(res.data))
       .catch((err) => console.log(err));
-  }, []);
+  }, [change]);
   if (!project) {
     return <div> Loading ...</div>;
   }
@@ -85,6 +89,7 @@ export default function SingleProject({ projectId }: ProjectId) {
                     <div className="mt-4 flex space-x-3 md:mt-0">
                       <button
                         type="button"
+                        onClick={() => setEditOpen(true)}
                         className="inline-flex justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                       >
                         <PencilIcon
@@ -93,6 +98,13 @@ export default function SingleProject({ projectId }: ProjectId) {
                         />
                         Edit
                       </button>
+                      <EidtProject
+                        open={editOpen}
+                        project={project}
+                        setOpen={setEditOpen}
+                        change={change}
+                        setChange={setChange}
+                      />
                       <button
                         type="button"
                         onClick={() => setOpen((preValue) => !preValue)}
@@ -108,6 +120,8 @@ export default function SingleProject({ projectId }: ProjectId) {
                         open={open}
                         setOpen={setOpen}
                         projectId={projectId}
+                        change={change}
+                        setChange={setChange}
                       />
                     </div>
                   </div>

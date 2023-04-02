@@ -1,21 +1,20 @@
 'use client';
 import { Dialog, Transition } from '@headlessui/react';
-// import { PlusIcon } from '@heroicons/react/20/solid';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { yupResolver } from '@hookform/resolvers/yup';
 import axios from 'axios';
-// import Link from 'next/link';
 import React, { Fragment, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import Select from 'react-select';
 import * as yup from 'yup';
+import { Project } from './[projectId]/SingleProject';
 
 interface AppProps {
   open: boolean;
   setOpen: (value: boolean) => void;
-  projectId: string;
-  change: boolean;
   setChange: (value: boolean) => void;
+  project: Project;
+  change: boolean;
 }
 
 type PeopleType = {
@@ -35,42 +34,42 @@ type Option = {
 type Inputs = {
   title: string;
   description: string;
-  // maintainers: string[];
-  deadline: Date;
 };
 
 const schema = yup.object().shape({
   title: yup.string().required(),
   description: yup.string().required(),
+  deadline: yup.date(),
 });
 
 type ReqData = {
   title: string;
   description: string;
-  status?: string;
-  priority: string;
-  reporterId: string;
-  assigneeIds: string[] | null;
-  relatedProjectId: string;
+  maintainerIds: string[] | null;
+  date?: Date;
 };
 
-const createIssue = async (reqData: ReqData) => {
+const updateIssue = async (reqData: ReqData, projectId: string) => {
   const config = {
     withCredentials: true,
   };
   try {
-    await axios.post('http://localhost:3600/api/issues', reqData, config);
+    await axios.put(
+      `http://localhost:3600/api/projects/${projectId}`,
+      reqData,
+      config,
+    );
   } catch (error: any) {
     console.error('Error:', error.message);
   }
 };
 
-export default function NewIssue({
+export default function EidtProject({
   open,
   setOpen,
-  projectId,
-  change,
+  project,
   setChange,
+  change,
 }: AppProps) {
   const [people, setPeople] = useState<
     { value: string; label: string }[] | null
@@ -89,16 +88,22 @@ export default function NewIssue({
             label: member.name,
           }),
         );
-        console.log('team', team);
         setPeople(team);
-        console.log('ProjectForm', response.data);
+        // console.log(issue);
       })
       .catch((error) => {
         console.log(error);
       });
   }, []);
-  const stringifiedUser = localStorage.getItem('user');
-  const user = stringifiedUser && JSON.parse(stringifiedUser);
+
+  let defaultPeople: { value: string; label: string }[] = [];
+  if (project.maintainers.length) {
+    defaultPeople = project.maintainers.map((member) => ({
+      value: member.id,
+      label: member.name,
+    }));
+  }
+
   const {
     register,
     handleSubmit,
@@ -108,8 +113,11 @@ export default function NewIssue({
     resolver: yupResolver(schema),
   });
 
-  const [selectedOption, setSelectedOption] = useState<Option[] | null>(null);
-  const [priority, setPriority] = useState<string>('low');
+  const [selectedOption, setSelectedOption] = useState<Option[] | null>(
+    defaultPeople,
+  );
+
+  // const [priority, setPriority] = useState<string>(issue.priority);
 
   const handleSelectChange = (option: Option[]) => {
     setSelectedOption(option);
@@ -119,10 +127,7 @@ export default function NewIssue({
     const requestData: ReqData = {
       title: data.title,
       description: data.description,
-      relatedProjectId: projectId,
-      priority: priority,
-      reporterId: user.id,
-      assigneeIds:
+      maintainerIds:
         selectedOption &&
         selectedOption.map(
           (item: { value: string; label: string }) => item.value,
@@ -130,10 +135,10 @@ export default function NewIssue({
     };
 
     console.log(requestData);
-    await createIssue(requestData);
+    await updateIssue(requestData, project.id);
     reset();
-    setChange(!change);
     setOpen(false);
+    setChange(!change);
   };
 
   return (
@@ -162,7 +167,7 @@ export default function NewIssue({
                       <div className="bg-indigo-700 py-6 px-4 sm:px-6">
                         <div className="flex items-center justify-between">
                           <Dialog.Title className="text-base font-semibold leading-6 text-white">
-                            New Issue
+                            Edit Project
                           </Dialog.Title>
                           <div className="ml-3 flex h-7 items-center">
                             <button
@@ -180,7 +185,7 @@ export default function NewIssue({
                         </div>
                         <div className="mt-1">
                           <p className="text-sm text-indigo-300">
-                            Fill the information to create a in this project
+                            Edit the information of this Project
                           </p>
                         </div>
                       </div>
@@ -192,12 +197,13 @@ export default function NewIssue({
                                 htmlFor="project-name"
                                 className="block text-sm font-medium leading-6 text-gray-900"
                               >
-                                Issue Title
+                                Project Title
                               </label>
                               <div className="mt-2">
                                 <input
                                   id="project-name"
                                   {...register('title')}
+                                  defaultValue={project.title}
                                   className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                 />
                                 {errors.title?.message}
@@ -216,7 +222,7 @@ export default function NewIssue({
                                   {...register('description')}
                                   rows={4}
                                   className="block w-full px-2 rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6"
-                                  defaultValue=""
+                                  defaultValue={project.description}
                                 />
                                 {errors.description?.message}
                               </div>
@@ -227,7 +233,7 @@ export default function NewIssue({
                               ) : (
                                 <>
                                   <h3 className="text-sm font-medium leading-6 text-gray-900">
-                                    Assignees
+                                    Members
                                   </h3>
                                   <div className="mt-2">
                                     <Select
@@ -235,7 +241,7 @@ export default function NewIssue({
                                       options={people}
                                       // @ts-ignore
                                       onChange={handleSelectChange}
-                                      required
+                                      defaultValue={defaultPeople}
                                       className="basic-multi-select block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 "
                                       classNamePrefix="select"
                                     />
@@ -243,32 +249,11 @@ export default function NewIssue({
                                 </>
                               )}
                             </div>
-                            <div>
-                              <h3 className="text-sm font-medium leading-6 text-gray-900">
-                                Priority
-                              </h3>
-                              <div className="mt-2">
-                                <Select
-                                  defaultValue={{ value: 'Low', label: 'Low' }}
-                                  options={[
-                                    { value: 'Low', label: 'Low' },
-                                    { value: 'Medium', label: 'Medium' },
-                                    { value: 'High', label: 'High' },
-                                  ]}
-                                  onChange={(event: any) => {
-                                    setPriority(event.value);
-                                    console.log(event.value);
-                                  }}
-                                  required
-                                  className="basic-select block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 "
-                                  classNamePrefix="select"
-                                />
-                              </div>
-                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
+
                     {!people ? (
                       'Not Possible to create Issue. May be there is no developer in your team '
                     ) : (

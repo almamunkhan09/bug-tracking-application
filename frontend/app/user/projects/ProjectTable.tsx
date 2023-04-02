@@ -62,6 +62,7 @@ export default function ProjectTable() {
   const user = stringifiedUser && JSON.parse(stringifiedUser);
   console.log(user.id);
   const [open, setOpen] = useState(false);
+  const [change,setChange] = useState<boolean>(false)
   const [projects, setProjects] = useState<any | null>(null);
   useEffect(() => {
     // setProjects(projects1);
@@ -69,7 +70,7 @@ export default function ProjectTable() {
       .get(`http://localhost:3600/api/users/${user.id}/projects`)
       .then((res) => setProjects(res.data))
       .catch((err) => console.log(err));
-  }, []);
+  }, [change]);
   if (!projects) {
     return <div> Loading ...</div>;
   }
@@ -100,7 +101,7 @@ export default function ProjectTable() {
             >
               New
             </button>
-            <NewProjectForm open={open} setOpen={setOpen} />
+            <NewProjectForm open={open} setOpen={setOpen} change={change} setChange={setChange}/>
           </div>
         )}
       </div>

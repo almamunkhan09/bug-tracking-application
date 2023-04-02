@@ -27,7 +27,7 @@ function Page() {
       <div className="card lg:card-side bg-base-100 shadow-xl h-full">
         <figure>
           {user.profilePicture ? (
-            <img src={user.profilePicture} alt="Album" />
+            <img src={user.profilePicture} alt="Album" className="w-40 " />
           ) : (
             <UserIcon />
           )}

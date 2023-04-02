@@ -51,14 +51,14 @@ export default function Login() {
       const res = await sendLoginRequest(data.email, data.password);
       if (res.status === 200) {
         setTimeout(() => {
-          setIsLoading(false);
           reset();
           return router.push('/user');
-        }, 4000);
+        }, 6000);
       } else {
         return alert('Error While login');
       }
     } catch (err: any) {
+      setIsLoading(false);
       alert(err.message);
     }
   };
